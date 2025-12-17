@@ -1,0 +1,111 @@
+services:
+  #  app:
+  #    build:
+  #      context: .
+  #      dockerfile: Dockerfile
+  #      target: dev
+  #    restart: unless-stopped
+  #    command: air
+  #    env_file: ./.env
+  #    ports:
+  #      - ${PORT}:${PORT}
+  #    environment:
+  #      APP_ENV: ${APP_ENV}
+  #      PORT: ${PORT}
+  #      DB_HOST: ${DB_HOST}
+  #      DB_PORT: ${DB_PORT}
+  #      DB_DATABASE: ${DB_DATABASE}
+  #      DB_USERNAME: ${DB_USERNAME}
+  #      DB_PASSWORD: ${DB_PASSWORD}
+  #      DB_SCHEMA: ${DB_SCHEMA}
+  #    volumes:
+  #      - ./:/app
+  #    depends_on:
+  #      pg:
+  #        condition: service_healthy
+  #    networks:
+  #      - dba 
+  pg:
+    image: postgis/postgis:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - pg:/var/lib/postgresql/data
+      - ./init-extensions.sql:/docker-entrypoint-initdb.d/init-extensions.sql
+
+    healthcheck:
+      test:
+        ["CMD-SHELL", "sh -c 'pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}'"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - dba 
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
+    networks:
+      - dba 
+
+  imgproxy:
+    image: darthsim/imgproxy:latest
+    container_name: imgproxy
+    # environment:
+    #   IMGPROXY_KEY: "7e47967729aed9975feb766a815cfd52e143a94dc4c39ac09de532df4a496f65"
+    #   IMGPROXY_SALT: "96a0b22cf538b45a03ebbf6a9fc156f433a218d0b68ec3f835c4005bbf863939"
+    #   IMGPROXY_USE_ETAG: "true"
+    #   IMGPROXY_ALLOWED_SOURCES: "*"
+    #   IMGPROXY_S3_ENDPOINT_USE_PATH_STYLE: "false"
+    #   AWS_ACCESS_KEY_ID: "minioadmin"
+    #   AWS_SECRET_ACCESS_KEY: "minioadmin"
+    #   AWS_REGION: "us-east-1"
+    #   IMGPROXY_S3_ENDPOINT: "http://localhost:9000"
+    #   AWS_DISABLE_SSL: "true"
+    #   IMGPROXY_USE_S3: "true"
+    #   IMGPROXY_IGNORE_SSL_VERIFICATION: "true"
+    ports:
+      - "9080:8080"
+    depends_on:
+      - minio
+    networks:
+      - dba 
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --save 20 1 --loglevel warning --requirepass dba@cache
+    networks:
+      - dba 
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+
+volumes:
+  pg:
+  minio:
+  redis_data:
+networks:
+  dba:

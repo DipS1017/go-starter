@@ -1,0 +1,1322 @@
+{
+  "components": {
+    "schemas": {
+      "dto.CodeExchangeRequest": {
+        "properties": {
+          "code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "type": "object"
+      },
+      "dto.EmailLoginRequest": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "is_admin": {
+            "type": "boolean"
+          },
+          "password": {
+            "minLength": 8,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object"
+      },
+      "dto.EmailSignUpRequest": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "is_regulation_accepted": {
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 2,
+            "type": "string"
+          },
+          "password": {
+            "minLength": 8,
+            "type": "string"
+          },
+          "phone_number": {
+            "type": "string"
+          },
+          "privacy_policy": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "email",
+          "is_regulation_accepted",
+          "name",
+          "password",
+          "privacy_policy"
+        ],
+        "type": "object"
+      },
+      "dto.LoginResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "is_admin": {
+            "type": "boolean"
+          },
+          "is_first_login": {
+            "type": "boolean"
+          },
+          "refresh_token": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "dto.MediaUploadForm": {
+        "properties": {
+          "file": {
+            "form": "file",
+            "format": "binary",
+            "type": "string"
+          },
+          "isPublic": {
+            "example": false,
+            "form": "isPublic",
+            "type": "boolean"
+          },
+          "thumbnail": {
+            "form": "thumbnail",
+            "format": "binary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "type": "object"
+      },
+      "dto.MediaUploadResponse": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "dto.PasswordResetConfirmRequest": {
+        "properties": {
+          "password": {
+            "minLength": 8,
+            "type": "string"
+          }
+        },
+        "required": [
+          "password"
+        ],
+        "type": "object"
+      },
+      "dto.PasswordResetRequest": {
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "type": "object"
+      },
+      "dto.PasswordResetTokenCheck": {
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "type": "object"
+      },
+      "dto.PasswordUpdateRequest": {
+        "properties": {
+          "current_password": {
+            "type": "string"
+          },
+          "new_password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "new_password"
+        ],
+        "type": "object"
+      },
+      "dto.ProfileImageUploadForm": {
+        "properties": {
+          "image": {
+            "form": "image",
+            "format": "binary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "image"
+        ],
+        "type": "object"
+      },
+      "dto.ProfileImageUploadResponse": {
+        "properties": {
+          "profile_image": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "dto.RefreshTokenResponse": {
+        "properties": {
+          "access_token": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "dto.ResendEmailVerificationRequest": {
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "type": "object"
+      },
+      "dto.SuccessMessageResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "dto.UserInfoResponse": {
+        "properties": {
+          "apple_id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "google_id": {
+            "type": "string"
+          },
+          "has_password": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          },
+          "is_email_verified": {
+            "type": "boolean"
+          },
+          "is_privacy_policy_accepted": {
+            "type": "boolean"
+          },
+          "is_profile_complete": {
+            "type": "boolean"
+          },
+          "is_regulation_accepted": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone_number": {
+            "type": "string"
+          },
+          "profession": {
+            "type": "string"
+          },
+          "profile_image": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "errorhandler.HttpError": {
+        "description": "This error is returned for specific failures within the API",
+        "properties": {
+          "caller": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer"
+          },
+          "message": {}
+        },
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "description": "Enter your API key in the format: x-api-key",
+        "in": "header",
+        "name": "x-api-key",
+        "type": "apiKey"
+      },
+      "BearerAuth": {
+        "description": "Enter your JWT token in the format: Bearer <token>",
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "RESTful API for dba.",
+    "title": "dba API",
+    "version": "1.0"
+  },
+  "externalDocs": {
+    "description": "",
+    "url": ""
+  },
+  "paths": {
+    "/api/v1/auth/apple/callback": {
+      "post": {
+        "description": "Login with apple oauth",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.CodeExchangeRequest"
+              }
+            }
+          },
+          "description": "code gotten from apple",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.CodeExchangeRequest"
+                }
+              }
+            },
+            "description": "Successfully logged in"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Login with apple",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/apple/login": {
+      "get": {
+        "description": "Login with apple oauth open in browser for login",
+        "responses": null,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Login with apple",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/google/callback": {
+      "post": {
+        "description": "Login with google oauth",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.CodeExchangeRequest"
+              }
+            }
+          },
+          "description": "code gotten from google",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.CodeExchangeRequest"
+                }
+              }
+            },
+            "description": "Successfully logged in"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Login with google",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/google/login": {
+      "get": {
+        "description": "Login with google oauth open in browser for login",
+        "responses": null,
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Login with google",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "description": "Login with email and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.EmailLoginRequest"
+              }
+            }
+          },
+          "description": "Email Login Request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.LoginResponse"
+                }
+              }
+            },
+            "description": "Successfully logged in"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Login with email",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "get": {
+        "description": "invaliate current session",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.SuccessMessageResponse"
+                }
+              }
+            },
+            "description": "Sign out successful."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "logout",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset": {
+      "post": {
+        "description": "generates password reset link and sends it to the user email",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.PasswordResetRequest"
+              }
+            }
+          },
+          "description": "password reset request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.PasswordResetRequest"
+                }
+              }
+            },
+            "description": "Successfully retrieved email"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "email is required"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "email not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Get email verification link",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/password-reset/confirm": {
+      "post": {
+        "description": "Resets the password for the user, token is sent in x-api-token, token and password are required",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.PasswordResetConfirmRequest"
+              }
+            }
+          },
+          "description": "password reset confirm request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.SuccessMessageResponse"
+                }
+              }
+            },
+            "description": "password reset successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Token expired"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "User not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "x-reset-token": []
+          }
+        ],
+        "summary": "Reset password api",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/password-token-check": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.PasswordResetTokenCheck"
+              }
+            }
+          },
+          "description": "password reset confirm request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.SuccessMessageResponse"
+                }
+              }
+            },
+            "description": "password reset successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Token expired"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "User not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "x-reset-token": []
+          }
+        ],
+        "summary": "Reset Token check api",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/password-update": {
+      "post": {
+        "description": "update password from user settings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.PasswordUpdateRequest"
+              }
+            }
+          },
+          "description": "password update request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.PasswordUpdateRequest"
+                }
+              }
+            },
+            "description": "Password updated successfully"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Bad requst"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Update Password",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/refresh-token": {
+      "get": {
+        "description": "Uses a valid refresh token to generate a new access token",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.RefreshTokenResponse"
+                }
+              }
+            },
+            "description": "New access token"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid refresh token"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Refresh access token",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/resend-verification-email": {
+      "post": {
+        "description": "Resend email for verification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.ResendEmailVerificationRequest"
+              }
+            }
+          },
+          "description": "Email Sign Up Request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.SuccessMessageResponse"
+                }
+              }
+            },
+            "description": "Successfully signed up"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Resend email for verification",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/auth/signup": {
+      "post": {
+        "description": "Sign up with email and password",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.EmailSignUpRequest"
+              }
+            }
+          },
+          "description": "Email Sign Up Request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.SuccessMessageResponse"
+                }
+              }
+            },
+            "description": "Successfully signed up"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Sign up with email",
+        "tags": [
+          "Authentication"
+        ]
+      }
+    },
+    "/api/v1/media/upload": {
+      "post": {
+        "description": "Uploads a media file",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.MediaUploadForm"
+              }
+            }
+          },
+          "description": "Multipart form data",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.MediaUploadResponse"
+                }
+              }
+            },
+            "description": "Successfully uploaded media file"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Upload media",
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/api/v1/public/media-cleanup": {
+      "delete": {
+        "description": "Deletes a Unused media file",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request or media ID"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Media not found"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Delete media",
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/api/v1/user/details": {
+      "get": {
+        "description": "Get User Detail Info",
+        "parameters": [
+          {
+            "description": "User ID",
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get User Detail Info",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/user/me": {
+      "get": {
+        "description": "Get User Info",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.UserInfoResponse"
+                }
+              }
+            },
+            "description": "User Info"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Get User Info",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/user/search": {
+      "get": {
+        "description": "Search users by name or email",
+        "parameters": [
+          {
+            "description": "Limit",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Search query",
+            "in": "query",
+            "name": "search_query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Search users",
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/v1/user/upload-profile": {
+      "post": {
+        "description": "Upload a profile image (JPEG/PNG/WebP up to 5MB) to object storage.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/dto.ProfileImageUploadForm"
+              }
+            }
+          },
+          "description": "Multipart form data",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/dto.ProfileImageUploadResponse"
+                }
+              }
+            },
+            "description": "Successfully uploaded profile image"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Invalid request format or file"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorhandler.HttpError"
+                }
+              }
+            },
+            "description": "Internal server error"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ],
+        "summary": "Upload profile image",
+        "tags": [
+          "User"
+        ]
+      }
+    }
+  },
+  "openapi": "3.1.0"
+}

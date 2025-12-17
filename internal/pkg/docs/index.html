@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DBA API</title>
+  <!-- Pull in the stylesheet from the CDN -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/swagger-ui-dist/swagger-ui.css"
+  />
+
+    <style>
+    /* ── Hide the Explore URL field/button ── */
+    .swagger-ui .topbar .download-url-wrapper {
+      display: none !important;
+    }
+
+    .swagger-ui .info{
+      margin: 10px 0 0 0 !important;
+    }
+    .swagger-ui .scheme-container {
+      padding: 0 !important;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- This is where the UI will render -->
+  <div id="swagger-ui"></div>
+
+  <!-- Pull in the bundle and standalone preset -->
+  <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+  <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js"></script>
+  <script>
+
+    const CaseInsensitiveFilterPlugin = () => ({
+      fn: {
+        opsFilter: (taggedOps, phrase) => {
+          const lower = phrase.toLowerCase();
+          // taggedOps is an Immutable OrderedMap of [tagName → operations]
+          return taggedOps.filter((ops, tag) =>
+            tag.toLowerCase().includes(lower)
+          );
+        }
+      }
+    });
+
+
+    window.onload = () => {
+      SwaggerUIBundle({
+        url: "/api/v1/docs/swagger.json",            // your spec’s URL
+        dom_id: "#swagger-ui",           // render target
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          CaseInsensitiveFilterPlugin
+        ],
+        layout: "StandaloneLayout",
+        deepLinking: true,
+        docExpansion: "none",
+        showExtensions: true,
+        filter: true,
+        persistAuthorization: true,
+      });
+    };
+  </script>
+</body>
+</html>
