@@ -21,7 +21,7 @@ FROM alpine:3.21 AS prod
 
 WORKDIR /app
 
-LABEL org.opencontainers.image.title="DBA api"
+LABEL org.opencontainers.image.title="go-starter api"
 
 RUN apk --update add \
   ca-certificates \

@@ -11,14 +11,14 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/db"
-	"github.com/webpoint-solutions-llc/dba/internal/errorhandler"
-	"github.com/webpoint-solutions-llc/dba/internal/handlers"
-	"github.com/webpoint-solutions-llc/dba/internal/middlewares"
-	"github.com/webpoint-solutions-llc/dba/internal/pkg/migrator"
-	"github.com/webpoint-solutions-llc/dba/internal/pkg/redisclient"
-	v1 "github.com/webpoint-solutions-llc/dba/internal/routes/v1"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db"
+	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/handlers"
+	"github.com/webpoint-solutions-llc/go-starter/internal/middlewares"
+	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/migrator"
+	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/redisclient"
+	v1 "github.com/webpoint-solutions-llc/go-starter/internal/routes/v1"
 )
 
 // ServerConfig holds configuration for server initialization

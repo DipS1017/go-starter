@@ -4,8 +4,8 @@ import (
 	"log/slog"
 
 	"github.com/labstack/echo/v4"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
-	"github.com/webpoint-solutions-llc/dba/internal/interfaces"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/interfaces"
 )
 
 type res struct {

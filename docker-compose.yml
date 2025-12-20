@@ -24,7 +24,7 @@ services:
   #      pg:
   #        condition: service_healthy
   #    networks:
-  #      - dba 
+  #      - go-starter 
   pg:
     image: postgis/postgis:latest
     restart: unless-stopped
@@ -46,7 +46,7 @@ services:
       retries: 3
       start_period: 15s
     networks:
-      - dba 
+      - go-starter 
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -61,7 +61,7 @@ services:
       MINIO_ROOT_PASSWORD: minioadmin
     command: server /data --console-address ":9001"
     networks:
-      - dba 
+      - go-starter 
 
   imgproxy:
     image: darthsim/imgproxy:latest
@@ -84,7 +84,7 @@ services:
     depends_on:
       - minio
     networks:
-      - dba 
+      - go-starter 
 
   redis:
     image: redis:latest
@@ -94,9 +94,9 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
-    command: redis-server --appendonly yes --save 20 1 --loglevel warning --requirepass dba@cache
+    command: redis-server --appendonly yes --save 20 1 --loglevel warning --requirepass go-starter@cache
     networks:
-      - dba 
+      - go-starter 
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -108,4 +108,4 @@ volumes:
   minio:
   redis_data:
 networks:
-  dba:
+  go-starter:

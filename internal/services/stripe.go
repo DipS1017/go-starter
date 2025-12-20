@@ -8,8 +8,8 @@ import (
 	billingsession "github.com/stripe/stripe-go/v82/billingportal/session"
 	"github.com/stripe/stripe-go/v82/checkout/session"
 	"github.com/stripe/stripe-go/v82/customer"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 )
 
 func (s *Service) CreatePortalUpgradeSession(customerID, subscriptionID, newPriceID, returnURL string) (*stripe.BillingPortalSession, error) {

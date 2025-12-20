@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/webpoint-solutions-llc/dba/internal/pkg/docs"
+	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/docs"
 )
 
 func (h *Handler) ServeDocs(c echo.Context) error {

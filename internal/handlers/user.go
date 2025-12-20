@@ -7,10 +7,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"github.com/labstack/echo/v4"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/constants"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
-	"github.com/webpoint-solutions-llc/dba/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/constants"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
 )
 
 // Me godoc

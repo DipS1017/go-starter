@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/smtp"
 
-	"github.com/webpoint-solutions-llc/dba/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
 )
 
 func SendEmail(recipientEmail, subject, body string) error {

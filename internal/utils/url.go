@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/webpoint-solutions-llc/dba/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
 )
 
 func JoinS3URL(key string) (string, error) {

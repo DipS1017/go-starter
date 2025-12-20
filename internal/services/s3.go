@@ -12,9 +12,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	s3types "github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
-	"github.com/webpoint-solutions-llc/dba/internal/utils"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/utils"
 )
 
 func newS3Client(ctx context.Context) (*S3Client, error) {

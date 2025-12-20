@@ -7,11 +7,11 @@ import (
 	goaway "github.com/TwiN/go-away"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
-	"github.com/webpoint-solutions-llc/dba/internal/constants"
-	"github.com/webpoint-solutions-llc/dba/internal/db/sqlc"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
-	"github.com/webpoint-solutions-llc/dba/internal/errorhandler"
-	"github.com/webpoint-solutions-llc/dba/internal/pkg/redisclient"
+	"github.com/webpoint-solutions-llc/go-starter/internal/constants"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db/sqlc"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/redisclient"
 )
 
 func (s *Service) UpdateProfileImage(ctx context.Context, userID uuid.UUID, imagePath string) (sqlc.UpdateProfileImageRow, error) {

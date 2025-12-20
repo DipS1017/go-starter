@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/webpoint-solutions-llc/dba/internal/db/sqlc"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db/sqlc"
 )
 
 func (s *Service) CreateMediaMeta(ctx context.Context, params sqlc.CreateMediaParams) (sqlc.CreateMediaRow, error) {

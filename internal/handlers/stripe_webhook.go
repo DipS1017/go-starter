@@ -10,8 +10,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stripe/stripe-go/v82"
 	"github.com/stripe/stripe-go/v82/webhook"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 )
 
 func (h *Handler) StripeWebhook(c echo.Context) error {

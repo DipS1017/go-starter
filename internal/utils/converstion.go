@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/webpoint-solutions-llc/dba/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
 )
 
 func ConvertIntToNumeric(x int32) (pgtype.Numeric, error) {

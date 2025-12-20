@@ -9,11 +9,11 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/db"
-	"github.com/webpoint-solutions-llc/dba/internal/errorhandler"
-	"github.com/webpoint-solutions-llc/dba/internal/types"
-	"github.com/webpoint-solutions-llc/dba/internal/utils"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db"
+	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/types"
+	"github.com/webpoint-solutions-llc/go-starter/internal/utils"
 )
 
 func AuthMiddleware(allowedRoles ...string) echo.MiddlewareFunc {

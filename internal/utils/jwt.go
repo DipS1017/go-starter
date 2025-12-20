@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
-	"github.com/webpoint-solutions-llc/dba/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
 )
 
 func GenerateJWT(payload dto.JWTPlayload) (string, error) {

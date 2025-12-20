@@ -8,13 +8,13 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/webpoint-solutions-llc/dba/cmd"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/cmd"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
 )
 
-// @title          dba API
+// @title          go-starter API
 // @version         1.0
-// @description     RESTful API for dba.
+// @description     RESTful API for go-starter.
 
 // @securityDefinitions.apikey BearerAuth
 // @in header

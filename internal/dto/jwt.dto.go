@@ -2,7 +2,7 @@ package dto
 
 import (
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/webpoint-solutions-llc/dba/internal/types"
+	"github.com/webpoint-solutions-llc/go-starter/internal/types"
 )
 
 type CustomClaims struct {

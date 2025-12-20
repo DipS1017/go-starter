@@ -2,7 +2,7 @@ package interfaces
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 )
 
 type Responders interface {

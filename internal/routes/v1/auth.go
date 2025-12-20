@@ -2,8 +2,8 @@ package v1
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/webpoint-solutions-llc/dba/internal/handlers"
-	"github.com/webpoint-solutions-llc/dba/internal/middlewares"
+	"github.com/webpoint-solutions-llc/go-starter/internal/handlers"
+	"github.com/webpoint-solutions-llc/go-starter/internal/middlewares"
 )
 
 func AuthRoutes(h *handlers.Handler, router *echo.Group) {

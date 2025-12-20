@@ -2,7 +2,7 @@ package dto
 
 import (
 	"github.com/google/uuid"
-	"github.com/webpoint-solutions-llc/dba/internal/db/sqlc"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db/sqlc"
 )
 
 type SecondaryEmailRequest struct {

@@ -300,8 +300,8 @@
     }
   },
   "info": {
-    "description": "RESTful API for dba.",
-    "title": "dba API",
+    "description": "RESTful API for go-starter.",
+    "title": "go-starter API",
     "version": "1.0"
   },
   "externalDocs": {

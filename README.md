@@ -1,6 +1,6 @@
-# DBA API
+# go-starter API
 
-This repository contains the API for the DBA application.
+This repository contains the API for the go-starter application.
 
 ## [Folder and Component  Architecture](./docs/architecture.md)
 

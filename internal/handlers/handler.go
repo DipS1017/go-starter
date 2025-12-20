@@ -3,9 +3,9 @@ package handlers
 import (
 	"log/slog"
 
-	"github.com/webpoint-solutions-llc/dba/internal/interfaces"
-	"github.com/webpoint-solutions-llc/dba/internal/responders"
-	"github.com/webpoint-solutions-llc/dba/internal/services"
+	"github.com/webpoint-solutions-llc/go-starter/internal/interfaces"
+	"github.com/webpoint-solutions-llc/go-starter/internal/responders"
+	"github.com/webpoint-solutions-llc/go-starter/internal/services"
 )
 
 type Handler struct {

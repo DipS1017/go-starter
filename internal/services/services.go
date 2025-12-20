@@ -5,11 +5,11 @@ import (
 	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/webpoint-solutions-llc/dba/internal/config"
-	"github.com/webpoint-solutions-llc/dba/internal/db"
-	"github.com/webpoint-solutions-llc/dba/internal/db/sqlc"
-	"github.com/webpoint-solutions-llc/dba/internal/pkg/apple"
-	"github.com/webpoint-solutions-llc/dba/internal/pkg/redisclient"
+	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db/sqlc"
+	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/apple"
+	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/redisclient"
 
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/jackc/pgx/v5/pgxpool"

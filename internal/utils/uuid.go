@@ -5,9 +5,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/webpoint-solutions-llc/dba/internal/constants"
-	"github.com/webpoint-solutions-llc/dba/internal/dto"
-	"github.com/webpoint-solutions-llc/dba/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/constants"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
+	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
 )
 
 // It returns true if the string is a valid UUID, false otherwise.

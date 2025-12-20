@@ -13,7 +13,7 @@ import (
 var Cfg Config
 
 type Config struct {
-	AppName       string `env:"APP_NAME"    envDefault:"dba-api"`
+	AppName       string `env:"APP_NAME"    envDefault:"go-starter-api"`
 	Port          string `env:"PORT"        envDefault:"8080"`
 	AppEnv        string `env:"APP_ENV"     envDefault:"local"`
 	LogLevel      string `env:"LOG_LEVEL"   envDefault:"debug"`
