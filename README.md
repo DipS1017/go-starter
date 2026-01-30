@@ -32,3 +32,14 @@ go run main.go
 ```bash
 air
 ```
+
+## Production Notes
+
+### Health checks
+
+- `GET /api/v1/public/healthz` returns `200` when DB/Redis are healthy and `503` when critical deps are down.
+
+### Configuration hygiene
+
+- Ensure `JWT_SECRET_KEY` and `API_KEY` are set in production.
+- Tighten `ALLOWED_ORIGINS` in production; avoid wildcards.

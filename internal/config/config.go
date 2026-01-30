@@ -104,3 +104,43 @@ func Init() {
 		Cfg.IsMinio = true
 	}
 }
+
+func Validate() ([]string, error) {
+	var warnings []string
+
+	if Cfg.AppEnv == "production" {
+		if Cfg.JWTSecret == "" {
+			return warnings, fmt.Errorf("JWT_SECRET_KEY is required in production")
+		}
+		if Cfg.APIKey == "" {
+			return warnings, fmt.Errorf("API_KEY is required in production")
+		}
+		if Cfg.PostgresqlURL == "" {
+			return warnings, fmt.Errorf("POSTGRESQL_URL is required in production")
+		}
+		if len(Cfg.AllowOrigins) == 0 {
+			warnings = append(warnings, "ALLOWED_ORIGINS is empty; CORS will block all browsers")
+		} else {
+			for _, origin := range Cfg.AllowOrigins {
+				if origin == "*" || origin == "http://*" || origin == "https://*" {
+					warnings = append(warnings, "ALLOWED_ORIGINS contains wildcard in production; tighten CORS in production")
+					break
+				}
+			}
+		}
+	}
+
+	if Cfg.APIKey == "" && Cfg.AppEnv != "production" {
+		warnings = append(warnings, "API_KEY is empty; API key middleware will reject requests")
+	}
+
+	if Cfg.StripeAPIKey == "" || Cfg.StripeWebhookSecret == "" {
+		warnings = append(warnings, "Stripe secrets are missing; Stripe endpoints/webhooks may fail")
+	}
+
+	if os.Getenv("REDIS_URL") == "" {
+		warnings = append(warnings, "REDIS_URL is empty; Redis features will fail if enabled")
+	}
+
+	return warnings, nil
+}

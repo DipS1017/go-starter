@@ -75,6 +75,14 @@ func InitializeConfig() error {
 
 	slog.SetDefault(slog.New(handler))
 
+	if warnings, err := config.Validate(); err != nil {
+		return err
+	} else {
+		for _, msg := range warnings {
+			slog.Warn(msg)
+		}
+	}
+
 	return nil
 }
 
@@ -124,8 +132,13 @@ func NewEchoServer() *echo.Echo {
 		HandleError: false,
 
 		LogValuesFunc: func(_ echo.Context, v middleware.RequestLoggerValues) error {
-			// Ignore errors as it is logged by global error logger
-			if v.Status >= 400 {
+			if v.Status >= 400 || v.Error != nil {
+				slog.Warn("Request",
+					"Method", v.Method,
+					"URI", v.URI,
+					"Status", v.Status,
+					"Error", v.Error,
+				)
 				return nil
 			}
 			slog.Info("Request",

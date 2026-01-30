@@ -6,15 +6,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/webpoint-solutions-llc/go-starter/internal/constants"
-	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/types"
 )
-
-// It returns true if the string is a valid UUID, false otherwise.
-func IsValidUUID(id string) bool {
-	_, err := uuid.Parse(id)
-	return err == nil
-}
 
 func StringToNullUUID(id string) (uuid.NullUUID, error) {
 	if id == "" {

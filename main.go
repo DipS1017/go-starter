@@ -10,6 +10,8 @@ import (
 
 	"github.com/webpoint-solutions-llc/go-starter/cmd"
 	"github.com/webpoint-solutions-llc/go-starter/internal/config"
+	"github.com/webpoint-solutions-llc/go-starter/internal/db"
+	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/redisclient"
 )
 
 // @title          go-starter API
@@ -53,4 +55,7 @@ func main() {
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal(err)
 	}
+
+	redisclient.Close()
+	db.CloseDbConnection()
 }

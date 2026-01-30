@@ -36,3 +36,9 @@ func OpenDbConnection(connStr string) *pgxpool.Pool {
 	SqlcQuery = sqlc.New(Client)
 	return dbInstance
 }
+
+func CloseDbConnection() {
+	if Client != nil {
+		Client.Close()
+	}
+}

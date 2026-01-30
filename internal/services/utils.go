@@ -9,8 +9,8 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/webpoint-solutions-llc/go-starter/internal/config"
 	"github.com/webpoint-solutions-llc/go-starter/internal/constants"
-	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/types"
 )
 
 func (s *Service) checkForWrongPasswordAttempt(ctx context.Context, key string) error {

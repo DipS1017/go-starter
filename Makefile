@@ -2,7 +2,7 @@
 
 # Build the application
 all: build test
-include .env
+-include .env
 
 build:
 	@echo "Building..."
@@ -45,24 +45,40 @@ test:
 # Integrations Tests for the application
 itest:
 	@echo "Running integration tests..."
-	@go test ./internal/database -v
+	@if [ -d ./internal/database ]; then \
+		go test ./internal/database -v; \
+	else \
+		echo "Skipping integration tests: ./internal/database not found"; \
+	fi
 
 # End-to-End Tests
 e2e:
 	@echo "Running E2E tests..."
-	@go test ./tests/e2e/suites/... -v -timeout 10m
+	@if [ -d ./tests/e2e/suites ]; then \
+		go test ./tests/e2e/suites/... -v -timeout 10m; \
+	else \
+		echo "Skipping E2E tests: ./tests/e2e/suites not found"; \
+	fi
 
 # Run specific E2E test suite
 e2e-suite:
 	@echo "Running E2E test suite: $(SUITE)"
-	@go test ./tests/e2e/suites -v -timeout 10m -run $(SUITE)
+	@if [ -d ./tests/e2e/suites ]; then \
+		go test ./tests/e2e/suites -v -timeout 10m -run $(SUITE); \
+	else \
+		echo "Skipping E2E suite: ./tests/e2e/suites not found"; \
+	fi
 
 # Run E2E tests with coverage
 e2e-coverage:
 	@echo "Running E2E tests with coverage..."
-	@go test ./tests/e2e/suites/... -v -timeout 10m -coverprofile=e2e-coverage.out
-	@go tool cover -html=e2e-coverage.out -o e2e-coverage.html
-	@echo "Coverage report generated: e2e-coverage.html"
+	@if [ -d ./tests/e2e/suites ]; then \
+		go test ./tests/e2e/suites/... -v -timeout 10m -coverprofile=e2e-coverage.out; \
+		go tool cover -html=e2e-coverage.out -o e2e-coverage.html; \
+		echo "Coverage report generated: e2e-coverage.html"; \
+	else \
+		echo "Skipping E2E coverage: ./tests/e2e/suites not found"; \
+	fi
 
 # Run all tests (unit, integration, and E2E)
 test-all: test itest e2e
