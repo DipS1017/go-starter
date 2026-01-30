@@ -31,8 +31,8 @@ func StringSliceToNullStringArray(arr []string) []string {
 	return arr
 }
 
-// StringSliceToNullUUIDArray converts []string to []uuid.UUID, skipping invalid UUIDs.
-func StringSliceToNullUUIDArray(arr []string) []uuid.UUID {
+// StringSliceToUUIDArray converts []string to []uuid.UUID, skipping invalid UUIDs.
+func StringSliceToUUIDArray(arr []string) []uuid.UUID {
 	var result []uuid.UUID
 	for _, s := range arr {
 		id, err := uuid.Parse(s)
@@ -43,7 +43,7 @@ func StringSliceToNullUUIDArray(arr []string) []uuid.UUID {
 	return result
 }
 
-// Helper func to parse comma-separated query params into string slices
+// ParseCSV Helper func to parse comma-separated query params into string slices
 func ParseCSV(param string) []string {
 	if param == "" {
 		return nil
