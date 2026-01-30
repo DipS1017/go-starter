@@ -34,7 +34,11 @@ import (
 // @Router /api/v1/media/upload [post]
 func (h *Handler) MediaUpload(c echo.Context) error {
 	ctx := c.Request().Context()
-	claims := c.Get("claims").(*dto.CustomClaims)
+
+	userID, err := utils.GetUserIDFromContext(c)
+	if err != nil {
+		return errorhandler.ErrorBadRequest(constants.MsgReLogin)
+	}
 
 	var (
 		mainUpload   *dto.S3FileUpload
@@ -86,9 +90,9 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 		defer src.Close()
 
 		ext := filepath.Ext(mainFH.Filename)
-		key := fmt.Sprintf("%s/%s/%s%s", baseDir, claims.Subject, mainFileId, ext)
+		key := fmt.Sprintf("%s/%s/%s%s", baseDir, userID, mainFileId, ext)
 		if config.Cfg.IsMinio {
-			key = fmt.Sprintf("/%s/%s/%s%s", baseDir, claims.Subject, mainFileId, ext)
+			key = fmt.Sprintf("/%s/%s/%s%s", baseDir, userID, mainFileId, ext)
 		}
 
 		params := dto.S3UploadParams{
@@ -116,9 +120,9 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 		defer src.Close()
 
 		ext := filepath.Ext(thumbFH.Filename)
-		key := fmt.Sprintf("%s/%s/thumb_%s%s", config.MediaDir, claims.Subject, mainFileId, ext)
+		key := fmt.Sprintf("%s/%s/thumb_%s%s", config.MediaDir, userID, mainFileId, ext)
 		if config.Cfg.IsMinio {
-			key = fmt.Sprintf("/%s/%s/thumb_%s%s", config.MediaDir, claims.Subject, mainFileId, ext)
+			key = fmt.Sprintf("/%s/%s/thumb_%s%s", config.MediaDir, userID, mainFileId, ext)
 		}
 
 		params := dto.S3UploadParams{

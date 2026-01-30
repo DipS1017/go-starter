@@ -46,7 +46,7 @@ func (s *Service) checkForWrongPasswordAttempt(ctx context.Context, key string) 
 	return nil
 }
 
-func extractNameFromClaims(claim dto.AppleIDTokenClaims) string {
+func extractNameFromClaims(claim types.AppleIDTokenClaims) string {
 	var name string
 
 	// Priority 1: Full name

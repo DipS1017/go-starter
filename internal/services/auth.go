@@ -85,7 +85,7 @@ func (s *Service) EmailLogin(ctx context.Context, params dto.LoginParams) (dto.L
 		return invalidLoginResponse, err
 	}
 
-	access_token, err := utils.GenerateJWT(dto.JWTPlayload{
+	access_token, err := utils.GenerateJWT(types.JWTPlayload{
 		UserID:    user.ID.String(),
 		TokenType: types.TokenTypeAccess,
 		Duration:  config.Cfg.AccessTokenDuration,
@@ -136,7 +136,7 @@ func (s *Service) EmailSignUp(ctx context.Context, params dto.EmailSignUpRequest
 	}
 
 	// generate both email_verify token
-	token, err := utils.GenerateJWT(dto.JWTPlayload{
+	token, err := utils.GenerateJWT(types.JWTPlayload{
 		UserID:    res.ID.String(),
 		TokenType: types.TokenTypeVerify,
 		Duration:  config.Cfg.EmailVerifyDuration,
@@ -209,7 +209,7 @@ func (s *Service) ResendEmailVerification(ctx context.Context, email string) (me
 	}
 
 	// generate both email_verify token
-	token, err := utils.GenerateJWT(dto.JWTPlayload{
+	token, err := utils.GenerateJWT(types.JWTPlayload{
 		UserID:    user.ID.String(),
 		TokenType: types.TokenTypeVerify,
 		Duration:  config.Cfg.EmailVerifyDuration,
@@ -366,7 +366,7 @@ func (s *Service) InserSocialLoginUser(ctx context.Context, params dto.LoginPara
 	}
 
 	// Generate access token
-	accessToken, err := utils.GenerateJWT(dto.JWTPlayload{
+	accessToken, err := utils.GenerateJWT(types.JWTPlayload{
 		UserID:    user.ID.String(),
 		TokenType: types.TokenTypeAccess,
 		Duration:  config.Cfg.AccessTokenDuration,
@@ -526,13 +526,13 @@ func (s *Service) GetAppleLoginUrl() (string, error) {
 	return s.appleClient.CreateCallbackURL(state), nil
 }
 
-func (s *Service) ExchangeCodeWithApple(ctx context.Context, code string) (*dto.AppleIDTokenClaims, error) {
+func (s *Service) ExchangeCodeWithApple(ctx context.Context, code string) (*types.AppleIDTokenClaims, error) {
 	appleToken, err := s.appleClient.GetAppleToken(code, 10*time.Minute)
 	if err != nil {
 		return nil, err
 	}
 
-	var claims dto.AppleIDTokenClaims
+	var claims types.AppleIDTokenClaims
 	_, _, err = jwt.NewParser().ParseUnverified(appleToken, &claims)
 	if err != nil {
 		return nil, err

@@ -1,8 +1,7 @@
-package dto
+package types
 
 import (
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/webpoint-solutions-llc/go-starter/internal/types"
 )
 
 type CustomClaims struct {
@@ -14,11 +13,11 @@ type CustomClaims struct {
 }
 
 type JWTPlayload struct {
-	UserID    string          `json:"user_id"`
-	TokenType types.TokenType `json:"token_type"`
-	Duration  int64           `json:"duration"`
-	Sid       string          `json:"sid"`
-	Role      types.Role      `json:"role"`
+	UserID    string    `json:"user_id"`
+	TokenType TokenType `json:"token_type"`
+	Duration  int64     `json:"duration"`
+	Sid       string    `json:"sid"`
+	Role      Role      `json:"role"`
 }
 
 type AppleIDTokenClaims struct {

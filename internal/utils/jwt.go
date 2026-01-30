@@ -10,11 +10,11 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/webpoint-solutions-llc/go-starter/internal/config"
-	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/types"
 )
 
-func GenerateJWT(payload dto.JWTPlayload) (string, error) {
+func GenerateJWT(payload types.JWTPlayload) (string, error) {
 	claims := jwt.MapClaims{
 		"token_type": payload.TokenType,
 		"sid":        payload.Sid,
@@ -34,8 +34,8 @@ func GenerateJWT(payload dto.JWTPlayload) (string, error) {
 	return token.SignedString([]byte(config.Cfg.JWTSecret))
 }
 
-func VerifyJWT(tokenString string) (*dto.CustomClaims, error) {
-	claims := &dto.CustomClaims{}
+func VerifyJWT(tokenString string) (*types.CustomClaims, error) {
+	claims := &types.CustomClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.Cfg.JWTSecret), nil
 	})
@@ -43,7 +43,7 @@ func VerifyJWT(tokenString string) (*dto.CustomClaims, error) {
 		return nil, errorhandler.ErrorUnauthorized("invalid token")
 	}
 
-	claims, ok := token.Claims.(*dto.CustomClaims)
+	claims, ok := token.Claims.(*types.CustomClaims)
 	if !ok {
 		return nil, errorhandler.ErrorUnauthorized("invalid token claims")
 	}
@@ -51,8 +51,8 @@ func VerifyJWT(tokenString string) (*dto.CustomClaims, error) {
 	return claims, nil
 }
 
-func VerifyResetToken(tokenString string, key string) (*dto.CustomClaims, error) {
-	claims := &dto.CustomClaims{}
+func VerifyResetToken(tokenString string, key string) (*types.CustomClaims, error) {
+	claims := &types.CustomClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(key), nil
 	})
@@ -61,7 +61,7 @@ func VerifyResetToken(tokenString string, key string) (*dto.CustomClaims, error)
 		return nil, errorhandler.ErrorUnauthorized("invalid token")
 	}
 
-	claims, ok := token.Claims.(*dto.CustomClaims)
+	claims, ok := token.Claims.(*types.CustomClaims)
 	if !ok {
 		// Return error if the claims are not of the correct type
 		return nil, errorhandler.ErrorUnauthorized("invalid token claims")

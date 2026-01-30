@@ -72,7 +72,7 @@ func StringToUUIDs(s string) ([]uuid.UUID, error) {
 // GetUserIDFromContext extracts the userID from JWT claims in echo.Context
 // Returns (uuid.UUID, errorhandler.HttpError) for handler use
 func GetUserIDFromContext(c echo.Context) (uuid.UUID, error) {
-	claims, ok := c.Get("claims").(*dto.CustomClaims)
+	claims, ok := c.Get("claims").(*types.CustomClaims)
 	if !ok || claims == nil {
 		return uuid.UUID{}, errorhandler.ErrorBadRequest(constants.MsgReLogin)
 	}

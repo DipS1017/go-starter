@@ -11,6 +11,7 @@ import (
 	"github.com/webpoint-solutions-llc/go-starter/internal/constants"
 	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
+	"github.com/webpoint-solutions-llc/go-starter/internal/utils"
 )
 
 // Me godoc
@@ -27,9 +28,7 @@ import (
 func (h *Handler) Me(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	claims := c.Get("claims").(*dto.CustomClaims)
-
-	userID, err := uuid.Parse(claims.Subject)
+	userID, err := utils.GetUserIDFromContext(c)
 	if err != nil {
 		return errorhandler.ErrorBadRequest(constants.MsgReLogin)
 	}
@@ -69,15 +68,17 @@ func (h *Handler) UploadProfileImage(c echo.Context) error {
 		return errorhandler.ErrorInternal(err.Error())
 	}
 	defer src.Close()
-
-	claims := c.Get("claims").(*dto.CustomClaims)
+	userID, err := utils.GetUserIDFromContext(c)
+	if err != nil {
+		return errorhandler.ErrorBadRequest(constants.MsgReLogin)
+	}
 
 	ext := filepath.Ext(fh.Filename)
 	// todo: use profile_pic in later implementation
-	key := fmt.Sprintf("%s/%s/%s%s", config.ProfileDir, claims.Subject, uuid.New().String(), ext)
+	key := fmt.Sprintf("%s/%s/%s%s", config.ProfileDir, userID, uuid.New().String(), ext)
 
 	if config.Cfg.IsMinio {
-		key = fmt.Sprintf("/%s/%s/%s%s", config.ProfileDir, claims.Subject, uuid.New().String(), ext)
+		key = fmt.Sprintf("/%s/%s/%s%s", config.ProfileDir, userID, uuid.New().String(), ext)
 	}
 
 	params := dto.S3UploadParams{
@@ -89,11 +90,6 @@ func (h *Handler) UploadProfileImage(c echo.Context) error {
 	s3Upload, err := h.svc.UploadFile(ctx, params)
 	if err != nil {
 		return errorhandler.ErrorBadRequest(err)
-	}
-
-	userID, err := uuid.Parse(claims.Subject)
-	if err != nil {
-		return errorhandler.ErrorBadRequest(constants.MsgReLogin)
 	}
 
 	update, err := h.svc.UpdateProfileImage(ctx, userID, s3Upload.Key)

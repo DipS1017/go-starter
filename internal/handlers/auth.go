@@ -447,7 +447,7 @@ func (h *Handler) RefreshToken(c echo.Context) error {
 		return errorhandler.ErrorBadRequest("Invalid refresh_token")
 	}
 
-	newAccessToken, err := utils.GenerateJWT(dto.JWTPlayload{
+	newAccessToken, err := utils.GenerateJWT(types.JWTPlayload{
 		UserID:    session.UserID.String(),
 		Sid:       session.ID.String(),
 		TokenType: types.TokenTypeAccess,
@@ -507,7 +507,7 @@ func (h *Handler) ResendEmailVerification(c echo.Context) error {
 func (h *Handler) Logout(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	claims := c.Get("claims").(*dto.CustomClaims)
+	claims := c.Get("claims").(*types.CustomClaims)
 
 	sessionID, err := uuid.Parse(claims.Sid)
 	if err != nil {
@@ -546,11 +546,9 @@ func (h *Handler) UpdatePassword(c echo.Context) error {
 		return errorhandler.ErrorBadRequest(err)
 	}
 
-	claims := c.Get("claims").(*dto.CustomClaims)
-
-	userID, err := uuid.Parse(claims.Subject)
+	userID, err := utils.GetUserIDFromContext(c)
 	if err != nil {
-		return errorhandler.ErrorBadRequest("Invalid user ID, Need to login again")
+		return errorhandler.ErrorBadRequest(constants.MsgReLogin)
 	}
 
 	err = h.svc.UpdatePassword(ctx, req, userID)
