@@ -3,8 +3,8 @@ package dto
 import "mime/multipart"
 
 type MediaUploadResponse struct {
-	Url  string `json:"url"`
-	Id   string `json:"id"`
+	URL  string `json:"url"`
+	ID   string `json:"id"`
 	Type string `json:"type,omitempty"`
 	Name string `json:"name,omitempty"`
 }

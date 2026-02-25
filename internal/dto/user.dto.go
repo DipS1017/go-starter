@@ -67,7 +67,7 @@ type LoginParams struct {
 	// Common fields
 	Email     string
 	UserAgent *string
-	IpAddress *netip.Addr
+	IPAddress *netip.Addr
 	IsAdmin   bool
 
 	// Email login
@@ -88,7 +88,7 @@ type CheckoutSessionParams struct {
 	PriceID     string
 	Quantity    int64
 	Metadata    map[string]string
-	PortfolioId string
+	PortfolioID string
 }
 
 type GoogleCallbackUserInfo struct {

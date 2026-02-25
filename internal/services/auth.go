@@ -78,14 +78,14 @@ func (s *Service) EmailLogin(ctx context.Context, params dto.LoginParams) (dto.L
 		UserID:           user.ID,
 		RefreshTokenHash: tokenHash,
 		UserAgent:        params.UserAgent,
-		IpAddress:        params.IpAddress,
+		IpAddress:        params.IPAddress,
 		ExpiresAt:        time.Now().Add(time.Duration(config.Cfg.RefreshTokenDuration) * time.Second),
 	})
 	if err != nil {
 		return invalidLoginResponse, err
 	}
 
-	access_token, err := utils.GenerateJWT(types.JWTPlayload{
+	accessToken, err := utils.GenerateJWT(types.JWTPlayload{
 		UserID:    user.ID.String(),
 		TokenType: types.TokenTypeAccess,
 		Duration:  config.Cfg.AccessTokenDuration,
@@ -97,7 +97,7 @@ func (s *Service) EmailLogin(ctx context.Context, params dto.LoginParams) (dto.L
 		return invalidLoginResponse, errorhandler.ErrorInternal("Failed to generate access token")
 	}
 	resp := dto.LoginResponse{
-		AccessToken:  access_token,
+		AccessToken:  accessToken,
 		RefreshToken: plainToken,
 		IsFirstLogin: session.FirstLogin.Bool,
 	}
@@ -107,12 +107,12 @@ func (s *Service) EmailLogin(ctx context.Context, params dto.LoginParams) (dto.L
 
 func (s *Service) EmailSignUp(ctx context.Context, params dto.EmailSignUpRequest) (message string, err error) {
 	argon := argon2.DefaultConfig()
-	password_hash, err := argon.HashEncoded([]byte(params.Password))
+	passwordHash, err := argon.HashEncoded([]byte(params.Password))
 	if err != nil {
 		return "", errorhandler.ErrorInternal("Failed to hash password")
 	}
 
-	stringPassword := string(password_hash)
+	stringPassword := string(passwordHash)
 
 	args := sqlc.CreateUserParams{
 		Name:        params.Name,
@@ -156,7 +156,7 @@ func (s *Service) EmailSignUp(ctx context.Context, params dto.EmailSignUpRequest
 			s.logger.Error("Failed to send email", "err", err)
 		}
 
-		err = utils.SendEmail(res.Email, "Verify your Email Address for The Model's Resource!", body)
+		err = utils.SendEmail(res.Email, "Verify your Email Address", body)
 		// Ingore if email is not sent
 		if err != nil {
 			s.logger.Error("Failed to send email", "err", err)
@@ -229,7 +229,7 @@ func (s *Service) ResendEmailVerification(ctx context.Context, email string) (me
 		s.logger.Error("Failed to send email", "err", err)
 	}
 
-	err = utils.SendEmail(user.Email, "Verify your Email Address for The Model's Resource!", body)
+	err = utils.SendEmail(user.Email, "Verify your Email Address!", body)
 	// Ingore if email is not sent
 	if err != nil {
 		s.logger.Error("Failed to send email", "err", err)
@@ -257,7 +257,7 @@ func (s *Service) InserSocialLoginUser(ctx context.Context, params dto.LoginPara
 	// If not found by email, or email is empty, try by AppleID (for Apple login)
 	if (err != nil && errors.Is(err, sql.ErrNoRows)) || params.Email == "" {
 		if params.AppleID != nil {
-			userByApple, errApple := s.q.GetUserByAppleId(ctx, params.AppleID)
+			userByApple, errApple := s.q.GetUserByAppleID(ctx, params.AppleID)
 			if errApple == nil {
 				user = sqlc.GetUserByEmailRow{
 					ID:    userByApple.ID,
@@ -331,14 +331,14 @@ func (s *Service) InserSocialLoginUser(ctx context.Context, params dto.LoginPara
 		usermeta := map[string]string{
 			"id": user.ID.String(),
 		}
-		stripeId, err := s.CreateOrGetStripeCustomer(user.Email, user.Name, usermeta)
+		stripeID, err := s.CreateOrGetStripeCustomer(user.Email, user.Name, usermeta)
 		if err != nil {
 			s.logger.Error("Failed to Create Stripe User", "err", err)
 		}
 
-		if stripeId != "" {
+		if stripeID != "" {
 			userPayload := dto.BaiscUserInfo{
-				StripeCustomerID: &stripeId,
+				StripeCustomerID: &stripeID,
 			}
 			params := dto.UpdateUserInfoParams{
 				User: userPayload,
@@ -357,7 +357,7 @@ func (s *Service) InserSocialLoginUser(ctx context.Context, params dto.LoginPara
 		UserID:           user.ID,
 		RefreshTokenHash: tokenHash,
 		UserAgent:        params.UserAgent,
-		IpAddress:        params.IpAddress,
+		IpAddress:        params.IPAddress,
 		ExpiresAt:        time.Now().Add(time.Duration(config.Cfg.RefreshTokenDuration) * time.Second),
 	}
 	session, err := s.q.CreateUserSession(ctx, sessionParams)
@@ -393,12 +393,12 @@ func (s *Service) VerifyUserEmail(ctx context.Context, token string) (res sqlc.U
 		return res, errorhandler.ErrorBadRequest(constants.MsgInvalidTokenType)
 	}
 
-	userId, err := uuid.Parse(claims.ID)
+	userID, err := uuid.Parse(claims.ID)
 	if err != nil {
 		return res, err
 	}
 
-	user, err := s.q.GetUserById(ctx, userId)
+	user, err := s.q.GetUserByID(ctx, userID)
 	if err != nil {
 		return res, err
 	}
@@ -410,13 +410,13 @@ func (s *Service) VerifyUserEmail(ctx context.Context, token string) (res sqlc.U
 
 	args := sqlc.UpdateEmailStatusParams{
 		IsEmailVerified: true,
-		ID:              userId,
+		ID:              userID,
 	}
 
 	res, err = s.q.UpdateEmailStatus(ctx, args)
 	if err != nil {
 
-		email, err2 := s.q.GetUserEmailById(ctx, userId)
+		email, err2 := s.q.GetUserEmailByID(ctx, userID)
 		if err2 == nil {
 			res.Email = email
 		}
@@ -517,7 +517,7 @@ func (s *Service) PasswordResetConfirm(ctx context.Context, params dto.PasswordR
 	return res, nil
 }
 
-func (s *Service) GetAppleLoginUrl() (string, error) {
+func (s *Service) GetAppleLoginURL() (string, error) {
 	state, err := utils.GenerateRandomSecret()
 	if err != nil {
 		return "", err
@@ -554,7 +554,7 @@ func (s *Service) ExchangeCodeWithApple(ctx context.Context, code string) (*type
 }
 
 func (s *Service) CleanupSession(ctx context.Context, sessionID uuid.UUID) (*uuid.UUID, error) {
-	userID, err := s.q.RevokeSessionById(ctx, sessionID)
+	userID, err := s.q.RevokeSessionByID(ctx, sessionID)
 	if err != nil {
 		return nil, err
 	}
@@ -570,9 +570,9 @@ func (s *Service) CleanupSession(ctx context.Context, sessionID uuid.UUID) (*uui
 	return &userID, nil
 }
 
-func (s *Service) UpdatePassword(ctx context.Context, params dto.PasswordUpdateRequest, UserId uuid.UUID) error {
+func (s *Service) UpdatePassword(ctx context.Context, params dto.PasswordUpdateRequest, userID uuid.UUID) error {
 	argon := argon2.DefaultConfig()
-	storedPassword, err := s.q.GetPasswordById(ctx, UserId)
+	storedPassword, err := s.q.GetPasswordByID(ctx, userID)
 	if err != nil {
 		s.logger.Error("Failed to get user password")
 		return err
@@ -583,18 +583,18 @@ func (s *Service) UpdatePassword(ctx context.Context, params dto.PasswordUpdateR
 			return errorhandler.ErrorBadRequest(constants.MsgInvalidCredentials)
 		}
 	}
-	password_hash, err := argon.HashEncoded([]byte(params.NewPassword))
+	passwordHash, err := argon.HashEncoded([]byte(params.NewPassword))
 	if err != nil {
 		s.logger.Error("Failed to generate a hash password")
 		return err
 	}
-	stringPassword := string(password_hash)
-	arg := sqlc.UpdatePasswordByIdParams{
+	stringPassword := string(passwordHash)
+	arg := sqlc.UpdatePasswordByIDParams{
 		Password: &stringPassword,
-		ID:       UserId,
+		ID:       userID,
 	}
 
-	err = s.q.UpdatePasswordById(ctx, arg)
+	err = s.q.UpdatePasswordByID(ctx, arg)
 	if err != nil {
 		return err
 	}

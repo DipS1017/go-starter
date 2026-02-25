@@ -44,7 +44,7 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 		mainUpload   *dto.S3FileUpload
 		mainFilename string
 		mainType     string
-		mainFileId   string
+		mainFileID   string
 	)
 
 	form, err := c.MultipartForm()
@@ -76,7 +76,7 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 	if mainType == "" {
 		return errorhandler.ErrorBadRequest(constants.MsgFileFormatNotSupported)
 	}
-	mainFileId = uuid.New().String()
+	mainFileID = uuid.New().String()
 	baseDir := config.MediaDir
 	if isPublic {
 		baseDir = config.PublicDir // must be defined in your config
@@ -90,9 +90,9 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 		defer src.Close()
 
 		ext := filepath.Ext(mainFH.Filename)
-		key := fmt.Sprintf("%s/%s/%s%s", baseDir, userID, mainFileId, ext)
+		key := fmt.Sprintf("%s/%s/%s%s", baseDir, userID, mainFileID, ext)
 		if config.Cfg.IsMinio {
-			key = fmt.Sprintf("/%s/%s/%s%s", baseDir, userID, mainFileId, ext)
+			key = fmt.Sprintf("/%s/%s/%s%s", baseDir, userID, mainFileID, ext)
 		}
 
 		params := dto.S3UploadParams{
@@ -120,9 +120,9 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 		defer src.Close()
 
 		ext := filepath.Ext(thumbFH.Filename)
-		key := fmt.Sprintf("%s/%s/thumb_%s%s", config.MediaDir, userID, mainFileId, ext)
+		key := fmt.Sprintf("%s/%s/thumb_%s%s", config.MediaDir, userID, mainFileID, ext)
 		if config.Cfg.IsMinio {
-			key = fmt.Sprintf("/%s/%s/thumb_%s%s", config.MediaDir, userID, mainFileId, ext)
+			key = fmt.Sprintf("/%s/%s/thumb_%s%s", config.MediaDir, userID, mainFileID, ext)
 		}
 
 		params := dto.S3UploadParams{
@@ -156,8 +156,8 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 	}
 
 	resp := dto.MediaUploadResponse{
-		Id:  media.ID.String(),
-		Url: *mediaParams.Url,
+		ID:  media.ID.String(),
+		URL: *mediaParams.Url,
 	}
 
 	return h.res.JSON(c, resp)
@@ -203,7 +203,7 @@ func (h *Handler) MediaCleanup(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	err = h.svc.DeleteMediaMetaByIdBulk(ctx, ids)
+	err = h.svc.DeleteMediaMetaByIDBulk(ctx, ids)
 	if err != nil {
 		return errorhandler.ErrorInternal(fmt.Errorf("failed to delete media metadata: %w", err))
 	}

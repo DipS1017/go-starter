@@ -15,10 +15,10 @@ func (s *Service) GetUnusedMedia(ctx context.Context) ([]sqlc.GetUnusedMediaRow,
 	return s.q.GetUnusedMedia(ctx)
 }
 
-func (s *Service) DeleteMediaMetaById(ctx context.Context, params uuid.UUID) (uuid.UUID, error) {
+func (s *Service) DeleteMediaMetaByID(ctx context.Context, params uuid.UUID) (uuid.UUID, error) {
 	return s.q.DeleteMediaByID(ctx, params)
 }
 
-func (s *Service) DeleteMediaMetaByIdBulk(ctx context.Context, params []uuid.UUID) error {
-	return s.q.DeleteMediaByIdBulk(ctx, params)
+func (s *Service) DeleteMediaMetaByIDBulk(ctx context.Context, params []uuid.UUID) error {
+	return s.q.DeleteMediaByIDBulk(ctx, params)
 }

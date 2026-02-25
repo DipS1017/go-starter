@@ -47,13 +47,13 @@ func (q *Queries) DeleteMediaByID(ctx context.Context, id uuid.UUID) (uuid.UUID,
 	return id, err
 }
 
-const deleteMediaByIdBulk = `-- name: DeleteMediaByIdBulk :exec
+const deleteMediaByIDBulk = `-- name: DeleteMediaByIDBulk :exec
 DELETE FROM media
 WHERE id = ANY($1::uuid[])
 `
 
-func (q *Queries) DeleteMediaByIdBulk(ctx context.Context, dollar_1 []uuid.UUID) error {
-	_, err := q.db.Exec(ctx, deleteMediaByIdBulk, dollar_1)
+func (q *Queries) DeleteMediaByIDBulk(ctx context.Context, dollar_1 []uuid.UUID) error {
+	_, err := q.db.Exec(ctx, deleteMediaByIDBulk, dollar_1)
 	return err
 }
 

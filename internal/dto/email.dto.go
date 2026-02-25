@@ -27,7 +27,7 @@ type SecondaryEmailResponse struct {
 	IsVerified bool      `json:"is_verified"`
 }
 
-type IdVerificationData struct {
+type IDVerificationData struct {
 	Name             string
 	VerificationLink string
 	JobLink          string
@@ -38,10 +38,10 @@ type IdVerificationData struct {
 }
 
 type SummaryEmailTemplate struct {
-	Recipient           sqlc.GetUserByIdRow
+	Recipient           sqlc.GetUserByIDRow
 	SupportEmail        string
-	SettingsUrl         string
-	FrontendUrl         string
+	SettingsURL         string
+	FrontendURL         string
 	SummaryNotification map[string]int
 }
 type EmailNotification struct {

@@ -234,7 +234,7 @@ func (q *Queries) DeleteOldSessions(ctx context.Context) error {
 	return err
 }
 
-const getAllUserIds = `-- name: GetAllUserIds :many
+const getAllUserIDs = `-- name: GetAllUserIDs :many
 SELECT
     id
 FROM
@@ -243,8 +243,8 @@ WHERE
     id <> $1
 `
 
-func (q *Queries) GetAllUserIds(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error) {
-	rows, err := q.db.Query(ctx, getAllUserIds, userID)
+func (q *Queries) GetAllUserIDs(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error) {
+	rows, err := q.db.Query(ctx, getAllUserIDs, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -290,7 +290,7 @@ func (q *Queries) GetOfflineUsers(ctx context.Context) ([]uuid.UUID, error) {
 	return items, nil
 }
 
-const getPasswordById = `-- name: GetPasswordById :one
+const getPasswordByID = `-- name: GetPasswordByID :one
 SELECT
     PASSWORD
 FROM
@@ -299,8 +299,8 @@ WHERE
     id = $1
 `
 
-func (q *Queries) GetPasswordById(ctx context.Context, id uuid.UUID) (*string, error) {
-	row := q.db.QueryRow(ctx, getPasswordById, id)
+func (q *Queries) GetPasswordByID(ctx context.Context, id uuid.UUID) (*string, error) {
+	row := q.db.QueryRow(ctx, getPasswordByID, id)
 	var password *string
 	err := row.Scan(&password)
 	return password, err
@@ -365,7 +365,7 @@ func (q *Queries) GetSessionByRefreshTokenHash(ctx context.Context, refreshToken
 	return i, err
 }
 
-const getUserByAppleId = `-- name: GetUserByAppleId :one
+const getUserByAppleID = `-- name: GetUserByAppleID :one
 SELECT
     id,
     name,
@@ -382,7 +382,7 @@ WHERE
     apple_id = $1
 `
 
-type GetUserByAppleIdRow struct {
+type GetUserByAppleIDRow struct {
 	ID              uuid.UUID `db:"id" json:"id"`
 	Name            string    `db:"name" json:"name"`
 	Email           string    `db:"email" json:"email"`
@@ -394,9 +394,9 @@ type GetUserByAppleIdRow struct {
 	IsEmailVerified bool      `db:"is_email_verified" json:"is_email_verified"`
 }
 
-func (q *Queries) GetUserByAppleId(ctx context.Context, appleID *string) (GetUserByAppleIdRow, error) {
-	row := q.db.QueryRow(ctx, getUserByAppleId, appleID)
-	var i GetUserByAppleIdRow
+func (q *Queries) GetUserByAppleID(ctx context.Context, appleID *string) (GetUserByAppleIDRow, error) {
+	row := q.db.QueryRow(ctx, getUserByAppleID, appleID)
+	var i GetUserByAppleIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -463,7 +463,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 	return i, err
 }
 
-const getUserByGoogleId = `-- name: GetUserByGoogleId :one
+const getUserByGoogleID = `-- name: GetUserByGoogleID :one
 SELECT
     id,
     name,
@@ -480,7 +480,7 @@ WHERE
     google_id = $1
 `
 
-type GetUserByGoogleIdRow struct {
+type GetUserByGoogleIDRow struct {
 	ID              uuid.UUID `db:"id" json:"id"`
 	Name            string    `db:"name" json:"name"`
 	Email           string    `db:"email" json:"email"`
@@ -492,9 +492,9 @@ type GetUserByGoogleIdRow struct {
 	IsEmailVerified bool      `db:"is_email_verified" json:"is_email_verified"`
 }
 
-func (q *Queries) GetUserByGoogleId(ctx context.Context, googleID *string) (GetUserByGoogleIdRow, error) {
-	row := q.db.QueryRow(ctx, getUserByGoogleId, googleID)
-	var i GetUserByGoogleIdRow
+func (q *Queries) GetUserByGoogleID(ctx context.Context, googleID *string) (GetUserByGoogleIDRow, error) {
+	row := q.db.QueryRow(ctx, getUserByGoogleID, googleID)
+	var i GetUserByGoogleIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -509,7 +509,7 @@ func (q *Queries) GetUserByGoogleId(ctx context.Context, googleID *string) (GetU
 	return i, err
 }
 
-const getUserById = `-- name: GetUserById :one
+const getUserByID = `-- name: GetUserByID :one
 SELECT
    u.id,
    u.name,
@@ -533,7 +533,7 @@ WHERE
     u.id = $1
 `
 
-type GetUserByIdRow struct {
+type GetUserByIDRow struct {
 	ID              uuid.UUID   `db:"id" json:"id"`
 	Name            string      `db:"name" json:"name"`
 	Email           string      `db:"email" json:"email"`
@@ -549,9 +549,9 @@ type GetUserByIdRow struct {
 	HasPassword     pgtype.Bool `db:"has_password" json:"has_password"`
 }
 
-func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (GetUserByIdRow, error) {
-	row := q.db.QueryRow(ctx, getUserById, id)
-	var i GetUserByIdRow
+func (q *Queries) GetUserByID(ctx context.Context, id uuid.UUID) (GetUserByIDRow, error) {
+	row := q.db.QueryRow(ctx, getUserByID, id)
+	var i GetUserByIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.Name,
@@ -592,7 +592,7 @@ func (q *Queries) GetUserByResetToken(ctx context.Context, resetToken *string) (
 	return i, err
 }
 
-const getUserCredentialById = `-- name: GetUserCredentialById :one
+const getUserCredentialByID = `-- name: GetUserCredentialByID :one
 SELECT
     email,
     PASSWORD,
@@ -603,20 +603,20 @@ WHERE
     id = $1
 `
 
-type GetUserCredentialByIdRow struct {
+type GetUserCredentialByIDRow struct {
 	Email    string  `db:"email" json:"email"`
 	Password *string `db:"password" json:"password"`
 	Name     string  `db:"name" json:"name"`
 }
 
-func (q *Queries) GetUserCredentialById(ctx context.Context, id uuid.UUID) (GetUserCredentialByIdRow, error) {
-	row := q.db.QueryRow(ctx, getUserCredentialById, id)
-	var i GetUserCredentialByIdRow
+func (q *Queries) GetUserCredentialByID(ctx context.Context, id uuid.UUID) (GetUserCredentialByIDRow, error) {
+	row := q.db.QueryRow(ctx, getUserCredentialByID, id)
+	var i GetUserCredentialByIDRow
 	err := row.Scan(&i.Email, &i.Password, &i.Name)
 	return i, err
 }
 
-const getUserEmailById = `-- name: GetUserEmailById :one
+const getUserEmailByID = `-- name: GetUserEmailByID :one
 SELECT
     email
 FROM
@@ -625,8 +625,8 @@ WHERE
     id = $1
 `
 
-func (q *Queries) GetUserEmailById(ctx context.Context, id uuid.UUID) (string, error) {
-	row := q.db.QueryRow(ctx, getUserEmailById, id)
+func (q *Queries) GetUserEmailByID(ctx context.Context, id uuid.UUID) (string, error) {
+	row := q.db.QueryRow(ctx, getUserEmailByID, id)
 	var email string
 	err := row.Scan(&email)
 	return email, err
@@ -654,7 +654,7 @@ func (q *Queries) GetUserStripeInfoByEmail(ctx context.Context, email string) (G
 	return i, err
 }
 
-const getUserStripeInfoById = `-- name: GetUserStripeInfoById :one
+const getUserStripeInfoByID = `-- name: GetUserStripeInfoByID :one
 SELECT
     email,
     name,
@@ -665,20 +665,20 @@ WHERE
     id = $1
 `
 
-type GetUserStripeInfoByIdRow struct {
+type GetUserStripeInfoByIDRow struct {
 	Email            string  `db:"email" json:"email"`
 	Name             string  `db:"name" json:"name"`
 	StripeCustomerID *string `db:"stripe_customer_id" json:"stripe_customer_id"`
 }
 
-func (q *Queries) GetUserStripeInfoById(ctx context.Context, id uuid.UUID) (GetUserStripeInfoByIdRow, error) {
-	row := q.db.QueryRow(ctx, getUserStripeInfoById, id)
-	var i GetUserStripeInfoByIdRow
+func (q *Queries) GetUserStripeInfoByID(ctx context.Context, id uuid.UUID) (GetUserStripeInfoByIDRow, error) {
+	row := q.db.QueryRow(ctx, getUserStripeInfoByID, id)
+	var i GetUserStripeInfoByIDRow
 	err := row.Scan(&i.Email, &i.Name, &i.StripeCustomerID)
 	return i, err
 }
 
-const revokeSessionById = `-- name: RevokeSessionById :one
+const revokeSessionByID = `-- name: RevokeSessionByID :one
 UPDATE
     user_sessions
 SET
@@ -687,8 +687,8 @@ WHERE
     id = $1 RETURNING user_id
 `
 
-func (q *Queries) RevokeSessionById(ctx context.Context, id uuid.UUID) (uuid.UUID, error) {
-	row := q.db.QueryRow(ctx, revokeSessionById, id)
+func (q *Queries) RevokeSessionByID(ctx context.Context, id uuid.UUID) (uuid.UUID, error) {
+	row := q.db.QueryRow(ctx, revokeSessionByID, id)
 	var user_id uuid.UUID
 	err := row.Scan(&user_id)
 	return user_id, err
@@ -723,7 +723,7 @@ func (q *Queries) UpdateEmailStatus(ctx context.Context, arg UpdateEmailStatusPa
 	return i, err
 }
 
-const updatePasswordById = `-- name: UpdatePasswordById :exec
+const updatePasswordByID = `-- name: UpdatePasswordByID :exec
 UPDATE
     users
 SET
@@ -732,13 +732,13 @@ WHERE
     id = $2
 `
 
-type UpdatePasswordByIdParams struct {
+type UpdatePasswordByIDParams struct {
 	Password *string   `db:"password" json:"password"`
 	ID       uuid.UUID `db:"id" json:"id"`
 }
 
-func (q *Queries) UpdatePasswordById(ctx context.Context, arg UpdatePasswordByIdParams) error {
-	_, err := q.db.Exec(ctx, updatePasswordById, arg.Password, arg.ID)
+func (q *Queries) UpdatePasswordByID(ctx context.Context, arg UpdatePasswordByIDParams) error {
+	_, err := q.db.Exec(ctx, updatePasswordByID, arg.Password, arg.ID)
 	return err
 }
 

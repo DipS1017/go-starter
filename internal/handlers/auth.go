@@ -115,7 +115,7 @@ func (h *Handler) GoogleCodeExchange(c echo.Context) error {
 		Name:     &name,
 
 		UserAgent: &userAgent,
-		IpAddress: ipPtr,
+		IPAddress: ipPtr,
 	}
 
 	res, err := h.svc.InserSocialLoginUser(ctx, loginParams)
@@ -134,7 +134,7 @@ func (h *Handler) GoogleCodeExchange(c echo.Context) error {
 // @Security ApiKeyAuth
 // @Router /api/v1/auth/apple/login [get]
 func (h *Handler) AppleLogin(c echo.Context) error {
-	authURL, err := h.svc.GetAppleLoginUrl()
+	authURL, err := h.svc.GetAppleLoginURL()
 	if err != nil {
 		return errorhandler.ErrorInternal(err)
 	}
@@ -183,7 +183,7 @@ func (h *Handler) AppleCodeExchange(c echo.Context) error {
 		Name:    &claim.Name,
 
 		UserAgent: &userAgent,
-		IpAddress: ipPtr,
+		IPAddress: ipPtr,
 	}
 
 	res, err := h.svc.InserSocialLoginUser(ctx, loginParams)
@@ -228,7 +228,7 @@ func (h *Handler) EmailLogin(c echo.Context) error {
 		Email:     req.Email,
 		Password:  &req.Password,
 		UserAgent: &userAgent,
-		IpAddress: ipPtr,
+		IPAddress: ipPtr,
 		IsAdmin:   req.IsAdmin,
 	}
 
@@ -279,19 +279,19 @@ func (h *Handler) EmailSignUp(c echo.Context) error {
 func (h *Handler) EmailVerify(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	redirectUrl, err := url.Parse(config.Cfg.FrontendURL + "/login")
+	redirectURL, err := url.Parse(config.Cfg.FrontendURL + "/login")
 	if err != nil {
 		return errorhandler.ErrorInternal(err)
 	}
 
-	q := redirectUrl.Query()
+	q := redirectURL.Query()
 	q.Set("is_verified", "false")
-	redirectUrl.RawQuery = q.Encode()
+	redirectURL.RawQuery = q.Encode()
 
 	token := c.QueryParam("token")
 	if token == "" {
 		c.Logger().Error("Token is required")
-		return c.Redirect(http.StatusTemporaryRedirect, redirectUrl.String())
+		return c.Redirect(http.StatusTemporaryRedirect, redirectURL.String())
 	}
 
 	res, err := h.svc.VerifyUserEmail(ctx, token)
@@ -299,26 +299,26 @@ func (h *Handler) EmailVerify(c echo.Context) error {
 
 		q.Set("email", utils.EncryptAndEncodeURL(res.Email))
 		q.Set("is_verified", "true")
-		redirectUrl.RawQuery = q.Encode()
+		redirectURL.RawQuery = q.Encode()
 
 		c.Logger().Error("Failed to verify user email ", "error", err)
 
-		redirectFailUrl, err := url.Parse(config.Cfg.FrontendURL + "/signup")
+		redirectFailURL, err := url.Parse(config.Cfg.FrontendURL + "/signup")
 		if err != nil {
 			return errorhandler.ErrorInternal(err)
 		}
-		q := redirectFailUrl.Query()
+		q := redirectFailURL.Query()
 		q.Set("is_verified", "false")
 		q.Set("email", utils.EncryptAndEncodeURL(res.Email))
-		redirectFailUrl.RawQuery = q.Encode()
+		redirectFailURL.RawQuery = q.Encode()
 
-		return c.Redirect(http.StatusTemporaryRedirect, redirectFailUrl.String())
+		return c.Redirect(http.StatusTemporaryRedirect, redirectFailURL.String())
 	}
 	q.Set("is_verified", "true")
 	q.Set("email", utils.EncryptAndEncodeURL(res.Email))
-	redirectUrl.RawQuery = q.Encode()
+	redirectURL.RawQuery = q.Encode()
 
-	return c.Redirect(http.StatusTemporaryRedirect, redirectUrl.String())
+	return c.Redirect(http.StatusTemporaryRedirect, redirectURL.String())
 }
 
 // PasswordResetEmail godoc
@@ -439,7 +439,7 @@ func (h *Handler) RefreshToken(c echo.Context) error {
 
 	hashedToken := utils.GenerateRefreshTokenHash(refreshToken)
 
-	// Parse userId as uuid.UUID
+	// Parse userID as uuid.UUID
 
 	session, err := h.svc.GetSessionByRefreshTokenHash(c.Request().Context(), hashedToken)
 	if err != nil {

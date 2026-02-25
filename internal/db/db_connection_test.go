@@ -12,7 +12,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-var TestDBUrl string
+var TestDBURL string
 
 func mustStartPostgresContainer() (func(context.Context) error, error) {
 	var (
@@ -50,7 +50,7 @@ func mustStartPostgresContainer() (func(context.Context) error, error) {
 		}, err
 	}
 
-	TestDBUrl = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPwd, dbhost, dbport.Port(), dbName)
+	TestDBURL = fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbUser, dbPwd, dbhost, dbport.Port(), dbName)
 
 	return func(ctx context.Context) error {
 		return dbContainer.Terminate(ctx)
@@ -71,7 +71,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestNew(t *testing.T) {
-	srv := OpenDbConnection(TestDBUrl)
+	srv := OpenDbConnection(TestDBURL)
 	if srv == nil {
 		t.Fatal("OpenDbConnection() returned nil")
 	}

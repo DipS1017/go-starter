@@ -14,7 +14,7 @@ FROM media
 WHERE reference_count <= 0
   AND created_at < NOW() - INTERVAL '1 day';
 
--- name: DeleteMediaByIdBulk :exec
+-- name: DeleteMediaByIDBulk :exec
 DELETE FROM media
 WHERE id = ANY($1::uuid[]);
 

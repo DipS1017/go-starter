@@ -35,30 +35,30 @@ func (s *Service) CreatePortalUpgradeSession(customerID, subscriptionID, newPric
 func (s *Service) CreateCheckoutSession(params dto.CheckoutSessionParams) (*stripe.CheckoutSession, error) {
 	stripe.Key = config.Cfg.StripeAPIKey
 
-	callbackUrl, err := url.JoinPath(config.Cfg.FrontendURL, config.Cfg.StripeCheckoutCallback)
+	callbackURL, err := url.JoinPath(config.Cfg.FrontendURL, config.Cfg.StripeCheckoutCallback)
 	// /profile/portfolio?payment_success=<id>
 	if err != nil {
 		return nil, err
 	}
 	// Parse the resulting URL
-	parsedUrl, err := url.Parse(callbackUrl)
+	parsedURL, err := url.Parse(callbackURL)
 	if err != nil {
 		return nil, err
 	}
 
-	successUrlObj := *parsedUrl
-	qSuccess := successUrlObj.Query()
+	successURLObj := *parsedURL
+	qSuccess := successURLObj.Query()
 	qSuccess.Set("success", "true")
-	qSuccess.Set("id", params.PortfolioId)
-	successUrlObj.RawQuery = qSuccess.Encode()
-	successUrl := successUrlObj.String()
+	qSuccess.Set("id", params.PortfolioID)
+	successURLObj.RawQuery = qSuccess.Encode()
+	successURL := successURLObj.String()
 
-	cancelUrlObj := *parsedUrl
-	qCancel := cancelUrlObj.Query()
+	cancelURLObj := *parsedURL
+	qCancel := cancelURLObj.Query()
 	qCancel.Set("success", "false")
-	qCancel.Set("id", params.PortfolioId)
-	cancelUrlObj.RawQuery = qCancel.Encode()
-	cancelUrl := cancelUrlObj.String()
+	qCancel.Set("id", params.PortfolioID)
+	cancelURLObj.RawQuery = qCancel.Encode()
+	cancelURL := cancelURLObj.String()
 
 	session_params := &stripe.CheckoutSessionParams{
 		Customer:           stripe.String(params.CustomerID),
@@ -71,8 +71,8 @@ func (s *Service) CreateCheckoutSession(params dto.CheckoutSessionParams) (*stri
 				Quantity: stripe.Int64(params.Quantity),
 			},
 		},
-		SuccessURL: stripe.String(successUrl),
-		CancelURL:  stripe.String(cancelUrl),
+		SuccessURL: stripe.String(successURL),
+		CancelURL:  stripe.String(cancelURL),
 		Metadata:   params.Metadata,
 	}
 

@@ -17,27 +17,27 @@ type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (CreateUserRow, error)
 	CreateUserSession(ctx context.Context, arg CreateUserSessionParams) (CreateUserSessionRow, error)
 	DeleteMediaByID(ctx context.Context, id uuid.UUID) (uuid.UUID, error)
-	DeleteMediaByIdBulk(ctx context.Context, dollar_1 []uuid.UUID) error
+	DeleteMediaByIDBulk(ctx context.Context, dollar_1 []uuid.UUID) error
 	DeleteOldSessions(ctx context.Context) error
-	GetAllUserIds(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error)
+	GetAllUserIDs(ctx context.Context, userID uuid.UUID) ([]uuid.UUID, error)
 	GetMediaByID(ctx context.Context, id uuid.UUID) (Medium, error)
 	GetOfflineUsers(ctx context.Context) ([]uuid.UUID, error)
-	GetPasswordById(ctx context.Context, id uuid.UUID) (*string, error)
+	GetPasswordByID(ctx context.Context, id uuid.UUID) (*string, error)
 	GetSessionByID(ctx context.Context, id uuid.UUID) (GetSessionByIDRow, error)
 	GetSessionByRefreshTokenHash(ctx context.Context, refreshTokenHash string) (GetSessionByRefreshTokenHashRow, error)
 	GetUnusedMedia(ctx context.Context) ([]GetUnusedMediaRow, error)
-	GetUserByAppleId(ctx context.Context, appleID *string) (GetUserByAppleIdRow, error)
+	GetUserByAppleID(ctx context.Context, appleID *string) (GetUserByAppleIDRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
-	GetUserByGoogleId(ctx context.Context, googleID *string) (GetUserByGoogleIdRow, error)
-	GetUserById(ctx context.Context, id uuid.UUID) (GetUserByIdRow, error)
+	GetUserByGoogleID(ctx context.Context, googleID *string) (GetUserByGoogleIDRow, error)
+	GetUserByID(ctx context.Context, id uuid.UUID) (GetUserByIDRow, error)
 	GetUserByResetToken(ctx context.Context, resetToken *string) (GetUserByResetTokenRow, error)
-	GetUserCredentialById(ctx context.Context, id uuid.UUID) (GetUserCredentialByIdRow, error)
-	GetUserEmailById(ctx context.Context, id uuid.UUID) (string, error)
+	GetUserCredentialByID(ctx context.Context, id uuid.UUID) (GetUserCredentialByIDRow, error)
+	GetUserEmailByID(ctx context.Context, id uuid.UUID) (string, error)
 	GetUserStripeInfoByEmail(ctx context.Context, email string) (GetUserStripeInfoByEmailRow, error)
-	GetUserStripeInfoById(ctx context.Context, id uuid.UUID) (GetUserStripeInfoByIdRow, error)
-	RevokeSessionById(ctx context.Context, id uuid.UUID) (uuid.UUID, error)
+	GetUserStripeInfoByID(ctx context.Context, id uuid.UUID) (GetUserStripeInfoByIDRow, error)
+	RevokeSessionByID(ctx context.Context, id uuid.UUID) (uuid.UUID, error)
 	UpdateEmailStatus(ctx context.Context, arg UpdateEmailStatusParams) (UpdateEmailStatusRow, error)
-	UpdatePasswordById(ctx context.Context, arg UpdatePasswordByIdParams) error
+	UpdatePasswordByID(ctx context.Context, arg UpdatePasswordByIDParams) error
 	UpdatePasswordReset(ctx context.Context, arg UpdatePasswordResetParams) (UpdatePasswordResetRow, error)
 	UpdateProfileImage(ctx context.Context, arg UpdateProfileImageParams) (UpdateProfileImageRow, error)
 	UpdateSessionLastSeen(ctx context.Context, id uuid.UUID) error

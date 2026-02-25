@@ -17,8 +17,6 @@ const (
 	MsgInvalidDataFormat    = "Invalid data format. Please check your input."
 
 	// Profanity
-	MsgProfanityViolation           = "Content violates community guidelines due to profanity."
-	MsgJobSummaryProfanity          = "Job summary violates community guidelines due to profanity."
 	MsgCompanyOverviewProfanity     = "Company overview violates community guidelines due to profanity."
 	MsgCompensationDetailsProfanity = "Compensation details violate community guidelines due to profanity."
 	MsgPrefQualificationsProfanity  = "Preferred qualifications violate community guidelines due to profanity."

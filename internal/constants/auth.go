@@ -2,7 +2,7 @@ package constants
 
 // User Authentication
 const (
-	MsgRegistrationSuccessful = "Registration Successful! Welcome to The Model's Resource."
+	MsgRegistrationSuccessful = "Registration Successful!"
 	MsgSignInSuccessful       = "Sign in successful!"
 
 	MsgSignOutSuccessful           = "Sign out successful."

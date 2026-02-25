@@ -81,7 +81,7 @@ func (s *Service) UploadFile(ctx context.Context, params dto.S3UploadParams) (dt
 	return s3Upload, nil
 }
 
-func (s *Service) S3MediaUrl(ctx context.Context, key string) (string, error) {
+func (s *Service) S3MediaURL(ctx context.Context, key string) (string, error) {
 	// if its using minio
 	if config.Cfg.S3Endpoint != "" {
 		return utils.JoinS3URL(key)

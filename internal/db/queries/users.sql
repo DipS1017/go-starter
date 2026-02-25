@@ -27,7 +27,7 @@ VALUES
     phone_number,
     role;
 
--- name: GetUserById :one
+-- name: GetUserByID :one
 SELECT
    u.id,
    u.name,
@@ -50,7 +50,7 @@ FROM
 WHERE
     u.id = $1;
 
--- name: GetUserEmailById :one
+-- name: GetUserEmailByID :one
 SELECT
     email
 FROM
@@ -114,7 +114,7 @@ WHERE
     email = $1;
 
 
--- name: GetUserByGoogleId :one
+-- name: GetUserByGoogleID :one
 SELECT
     id,
     name,
@@ -140,7 +140,7 @@ WHERE
     is_email_verified,
     email;
 
--- name: GetUserByAppleId :one
+-- name: GetUserByAppleID :one
 SELECT
     id,
     name,
@@ -238,7 +238,7 @@ FROM user_sessions
 WHERE last_seen_at < NOW() - INTERVAL '1 minute'
 LIMIT 1000;
 
--- name: RevokeSessionById :one
+-- name: RevokeSessionByID :one
 UPDATE
     user_sessions
 SET
@@ -268,7 +268,7 @@ SET
 WHERE
     id = sqlc.arg(id);
 
--- name: GetPasswordById :one
+-- name: GetPasswordByID :one
 SELECT
     PASSWORD
 FROM
@@ -276,7 +276,7 @@ FROM
 WHERE
     id = $1;
 
--- name: UpdatePasswordById :exec
+-- name: UpdatePasswordByID :exec
 UPDATE
     users
 SET
@@ -284,7 +284,7 @@ SET
 WHERE
     id = $2;
 
--- name: GetUserCredentialById :one
+-- name: GetUserCredentialByID :one
 SELECT
     email,
     PASSWORD,
@@ -305,7 +305,7 @@ WHERE
     email;
 
 
--- name: GetAllUserIds :many
+-- name: GetAllUserIDs :many
 SELECT
     id
 FROM
@@ -313,7 +313,7 @@ FROM
 WHERE
     id <> @user_id;
 
--- name: GetUserStripeInfoById :one
+-- name: GetUserStripeInfoByID :one
 SELECT
     email,
     name,
