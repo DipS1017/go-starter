@@ -4,31 +4,48 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/aws/aws-sdk-go-v2/service/s3"
+	s3types "github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/redis/go-redis/v9"
 	"github.com/webpoint-solutions-llc/go-starter/internal/config"
 	"github.com/webpoint-solutions-llc/go-starter/internal/db"
 	"github.com/webpoint-solutions-llc/go-starter/internal/db/sqlc"
+	"github.com/webpoint-solutions-llc/go-starter/internal/dto"
 	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/apple"
 	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/redisclient"
-
-	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/redis/go-redis/v9"
 )
 
-type S3Client struct {
-	client    *s3.Client
-	presigner *s3.PresignClient
+// querier extends the sqlc-generated Querier with transaction support.
+// *sqlc.Queries satisfies this interface.
+type querier interface {
+	sqlc.Querier
+	WithTx(tx pgx.Tx) *sqlc.Queries
+}
+
+// cache is the minimal Redis interface used by the service layer.
+// *redis.Client satisfies this interface.
+type cache interface {
+	Get(ctx context.Context, key string) *redis.StringCmd
+	TxPipeline() redis.Pipeliner
+}
+
+// storage is the interface for object storage operations.
+// *S3Client satisfies this interface.
+type storage interface {
+	UploadFile(ctx context.Context, params dto.S3UploadParams) (dto.S3FileUpload, error)
+	S3MediaURL(ctx context.Context, key string) (string, error)
+	DeleteObjects(ctx context.Context, objects []s3types.ObjectIdentifier, bypassGovernance bool) error
 }
 
 type Service struct {
-	q      *sqlc.Queries
-	redis  *redis.Client
-	db     *pgxpool.Pool
-	logger *slog.Logger
+	q     querier
+	cache cache
+	store storage
+	db    *pgxpool.Pool
 
-	s3Client *S3Client
-
+	logger      *slog.Logger
 	appleClient *apple.AppleConfig
 	esClient    *elasticsearch.Client
 }
@@ -41,18 +58,16 @@ func NewService() *Service {
 	}
 
 	appleClient := apple.NewAppleConfig(config.Cfg.AppleTeamID, config.Cfg.AppleClientID, config.Cfg.AppleRedirectURI, config.Cfg.AppleKeyID)
-
 	if err := appleClient.LoadPrivateKeyFromFile(config.Cfg.AppleCertificatePath); err != nil {
 		slog.Error("Failed to load private key from file", "error", err)
 	}
 
-	s := &Service{
-		q:           db.SqlcQuery,
-		redis:       redisclient.Client,
-		logger:      slog.Default().With("component", "services"),
-		s3Client:    s3Client,
+	return &Service{
+		q:           db.SqlcQuery,       // *sqlc.Queries satisfies querier
+		cache:       redisclient.Client, // *redis.Client satisfies cache
+		store:       s3Client,           // *S3Client satisfies storage
 		db:          db.Client,
+		logger:      slog.Default().With("component", "services"),
 		appleClient: appleClient,
 	}
-	return s
 }

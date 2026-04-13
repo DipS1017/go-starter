@@ -15,7 +15,7 @@ import (
 	"github.com/webpoint-solutions-llc/go-starter/internal/db"
 	"github.com/webpoint-solutions-llc/go-starter/internal/errorhandler"
 	"github.com/webpoint-solutions-llc/go-starter/internal/handlers"
-	"github.com/webpoint-solutions-llc/go-starter/internal/middlewares"
+	// "github.com/webpoint-solutions-llc/go-starter/internal/middlewares"
 	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/migrator"
 	"github.com/webpoint-solutions-llc/go-starter/internal/pkg/redisclient"
 	v1 "github.com/webpoint-solutions-llc/go-starter/internal/routes/v1"
@@ -163,17 +163,17 @@ func NewEchoServer() *echo.Echo {
 
 	e.Use(middleware.RequestID())
 
-	e.Use(middlewares.ApiKeyAuthMiddleware(
-		"/favicon.ico",
-		"/ws",
-		"/api/v1/docs",
-		"/api/v1/docs/swagger.json",
-		"/api/v1/public/healthz",
-		"/api/v1/public/stripe-webhook",
-		"/api/v1/auth/google/login",
-		"/api/v1/auth/apple/login",
-		"/api/v1/auth/email-verify",
-	))
+	// e.Use(middlewares.ApiKeyAuthMiddleware(
+	// 	"/favicon.ico",
+	// 	"/ws",
+	// 	"/api/v1/docs",
+	// 	"/api/v1/docs/swagger.json",
+	// 	"/api/v1/public/healthz",
+	// 	"/api/v1/public/stripe-webhook",
+	// 	"/api/v1/auth/google/login",
+	// 	"/api/v1/auth/apple/login",
+	// 	"/api/v1/auth/email-verify",
+	// ))
 
 	// Load routes
 	apiV1 := e.Group("/api/v1")

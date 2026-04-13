@@ -118,7 +118,7 @@ func (h *Handler) GoogleCodeExchange(c echo.Context) error {
 		IPAddress: ipPtr,
 	}
 
-	res, err := h.svc.InserSocialLoginUser(ctx, loginParams)
+	res, err := h.auth.InserSocialLoginUser(ctx, loginParams)
 	if err != nil {
 		c.Logger().Error(err)
 		return errorhandler.ErrorInternal("Failed to insert User")
@@ -134,7 +134,7 @@ func (h *Handler) GoogleCodeExchange(c echo.Context) error {
 // @Security ApiKeyAuth
 // @Router /api/v1/auth/apple/login [get]
 func (h *Handler) AppleLogin(c echo.Context) error {
-	authURL, err := h.svc.GetAppleLoginURL()
+	authURL, err := h.auth.GetAppleLoginURL()
 	if err != nil {
 		return errorhandler.ErrorInternal(err)
 	}
@@ -165,7 +165,7 @@ func (h *Handler) AppleCodeExchange(c echo.Context) error {
 	}
 
 	// Exchange the authorization code for an access token
-	claim, err := h.svc.ExchangeCodeWithApple(ctx, requestData.Code)
+	claim, err := h.auth.ExchangeCodeWithApple(ctx, requestData.Code)
 	if err != nil {
 		return errorhandler.ErrorBadRequest(err)
 	}
@@ -186,7 +186,7 @@ func (h *Handler) AppleCodeExchange(c echo.Context) error {
 		IPAddress: ipPtr,
 	}
 
-	res, err := h.svc.InserSocialLoginUser(ctx, loginParams)
+	res, err := h.auth.InserSocialLoginUser(ctx, loginParams)
 	if err != nil {
 		return errorhandler.ErrorInternal("Failed to insert User")
 	}
@@ -232,7 +232,7 @@ func (h *Handler) EmailLogin(c echo.Context) error {
 		IsAdmin:   req.IsAdmin,
 	}
 
-	res, err := h.svc.EmailLogin(ctx, params)
+	res, err := h.auth.EmailLogin(ctx, params)
 	if err != nil {
 		c.Logger().Error("Failed to login user ", "error", err)
 
@@ -266,7 +266,7 @@ func (h *Handler) EmailSignUp(c echo.Context) error {
 		return errorhandler.ErrorBadRequest(err)
 	}
 
-	_, err := h.svc.EmailSignUp(ctx, req)
+	_, err := h.auth.EmailSignUp(ctx, req)
 	if err != nil {
 		c.Logger().Error("Failed to sign up user ", "error", err)
 
@@ -294,7 +294,7 @@ func (h *Handler) EmailVerify(c echo.Context) error {
 		return c.Redirect(http.StatusTemporaryRedirect, redirectURL.String())
 	}
 
-	res, err := h.svc.VerifyUserEmail(ctx, token)
+	res, err := h.auth.VerifyUserEmail(ctx, token)
 	if err != nil {
 
 		q.Set("email", utils.EncryptAndEncodeURL(res.Email))
@@ -345,7 +345,7 @@ func (h *Handler) PasswordReset(c echo.Context) error {
 		return err
 	}
 
-	_, err := h.svc.PasswordResetLink(ctx, req.Email)
+	_, err := h.auth.PasswordResetLink(ctx, req.Email)
 	if err != nil {
 		return errorhandler.ErrorNotFound(err)
 	}
@@ -375,7 +375,7 @@ func (h *Handler) PasswordResetTokenCheck(c echo.Context) error {
 	if err := c.Validate(&req); err != nil {
 		return errorhandler.ErrorBadRequest(err)
 	}
-	_, err := h.svc.PasswordResetTokenCheck(ctx, req)
+	_, err := h.auth.PasswordResetTokenCheck(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -411,7 +411,7 @@ func (h *Handler) PasswordResetConfirm(c echo.Context) error {
 	if err := c.Validate(&req); err != nil {
 		return errorhandler.ErrorBadRequest(err)
 	}
-	_, err := h.svc.PasswordResetConfirm(ctx, req)
+	_, err := h.auth.PasswordResetConfirm(ctx, req)
 	if err != nil {
 		return errorhandler.ErrorInternal(err)
 	}
@@ -441,7 +441,7 @@ func (h *Handler) RefreshToken(c echo.Context) error {
 
 	// Parse userID as uuid.UUID
 
-	session, err := h.svc.GetSessionByRefreshTokenHash(c.Request().Context(), hashedToken)
+	session, err := h.auth.GetSessionByRefreshTokenHash(c.Request().Context(), hashedToken)
 	if err != nil {
 		c.Logger().Error("Refresh", "error", err)
 		return errorhandler.ErrorBadRequest("Invalid refresh_token")
@@ -486,7 +486,7 @@ func (h *Handler) ResendEmailVerification(c echo.Context) error {
 		return errorhandler.ErrorBadRequest(err)
 	}
 
-	_, err := h.svc.ResendEmailVerification(ctx, req.Email)
+	_, err := h.auth.ResendEmailVerification(ctx, req.Email)
 	if err != nil {
 		return errorhandler.ErrorInternal("Failed to resend verification email : " + err.Error())
 	}
@@ -514,7 +514,7 @@ func (h *Handler) Logout(c echo.Context) error {
 		return errorhandler.ErrorBadRequest("Invalid Sesion ID")
 	}
 
-	_, err = h.svc.CleanupSession(ctx, sessionID)
+	_, err = h.auth.CleanupSession(ctx, sessionID)
 	if err != nil {
 		return errorhandler.ErrorInternal("Failed to logout")
 	}
@@ -551,7 +551,7 @@ func (h *Handler) UpdatePassword(c echo.Context) error {
 		return errorhandler.ErrorBadRequest(constants.MsgReLogin)
 	}
 
-	err = h.svc.UpdatePassword(ctx, req, userID)
+	err = h.auth.UpdatePassword(ctx, req, userID)
 	if err != nil {
 		c.Logger().Error(err)
 		return errorhandler.ErrorInternal("Failed to Update password")

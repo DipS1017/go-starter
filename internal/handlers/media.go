@@ -102,7 +102,7 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 			ContentType: mainFH.Header.Get("Content-Type"),
 		}
 
-		upload, err := h.svc.UploadFile(gctx, params)
+		upload, err := h.media.UploadFile(gctx, params)
 		if err != nil {
 			return err
 		}
@@ -132,7 +132,7 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 			ContentType: thumbFH.Header.Get("Content-Type"),
 		}
 
-		_, err = h.svc.UploadFile(gctx, params)
+		_, err = h.media.UploadFile(gctx, params)
 		if err != nil {
 			return err
 		}
@@ -150,7 +150,7 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 		Url:  &mainUpload.Key,
 		Type: &mainType,
 	}
-	media, err := h.svc.CreateMediaMeta(ctx, mediaParams)
+	media, err := h.media.CreateMediaMeta(ctx, mediaParams)
 	if err != nil {
 		return errorhandler.ErrorInternal(err)
 	}
@@ -177,7 +177,7 @@ func (h *Handler) MediaUpload(c echo.Context) error {
 func (h *Handler) MediaCleanup(c echo.Context) error {
 	ctx := c.Request().Context()
 
-	res, err := h.svc.GetUnusedMedia(ctx)
+	res, err := h.media.GetUnusedMedia(ctx)
 	if err != nil {
 		return err
 	}
@@ -199,11 +199,11 @@ func (h *Handler) MediaCleanup(c echo.Context) error {
 		})
 	}
 	bypassGovernance := false
-	err = h.svc.DeleteObjects(ctx, objectsToDelete, bypassGovernance)
+	err = h.media.DeleteObjects(ctx, objectsToDelete, bypassGovernance)
 	if err != nil {
 		return err
 	}
-	err = h.svc.DeleteMediaMetaByIDBulk(ctx, ids)
+	err = h.media.DeleteMediaMetaByIDBulk(ctx, ids)
 	if err != nil {
 		return errorhandler.ErrorInternal(fmt.Errorf("failed to delete media metadata: %w", err))
 	}

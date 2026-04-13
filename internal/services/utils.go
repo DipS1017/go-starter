@@ -14,7 +14,7 @@ import (
 )
 
 func (s *Service) checkForWrongPasswordAttempt(ctx context.Context, key string) error {
-	wrongAttempts, err := s.redis.Get(ctx, key).Result()
+	wrongAttempts, err := s.cache.Get(ctx, key).Result()
 	if err != nil && err != redis.Nil {
 		s.logger.Error("Redis Get error "+key, "err", err)
 		return err
@@ -37,7 +37,7 @@ func (s *Service) checkForWrongPasswordAttempt(ctx context.Context, key string) 
 	}
 
 	// Increment the counter and set an expiration of 60 seconds
-	pipe := s.redis.TxPipeline()
+	pipe := s.cache.TxPipeline()
 	pipe.Incr(ctx, key)
 	pipe.Expire(ctx, key, 60*time.Second)
 	if _, err = pipe.Exec(ctx); err != nil {

@@ -65,7 +65,7 @@ func (h *Handler) StripeWebhook(c echo.Context) error {
 				User: user,
 			}
 
-			updateErr := h.svc.UpdateUser(context.Background(), userID, params)
+			updateErr := h.webhook.UpdateUser(context.Background(), userID, params)
 			if updateErr != nil {
 				h.log.Debug("Error on updating user: ", "err", updateErr.Error())
 			} else {

@@ -33,7 +33,7 @@ func (h *Handler) Me(c echo.Context) error {
 		return errorhandler.ErrorBadRequest(constants.MsgReLogin)
 	}
 
-	user, err := h.svc.GetUserByID(ctx, userID)
+	user, err := h.user.GetUserByID(ctx, userID)
 	if err != nil {
 		return errorhandler.ErrorInternal(err)
 	}
@@ -87,12 +87,12 @@ func (h *Handler) UploadProfileImage(c echo.Context) error {
 		Size:   fh.Size,
 	}
 
-	s3Upload, err := h.svc.UploadFile(ctx, params)
+	s3Upload, err := h.user.UploadFile(ctx, params)
 	if err != nil {
 		return errorhandler.ErrorBadRequest(err)
 	}
 
-	update, err := h.svc.UpdateProfileImage(ctx, userID, s3Upload.Key)
+	update, err := h.user.UpdateProfileImage(ctx, userID, s3Upload.Key)
 	if err != nil {
 		return errorhandler.ErrorInternal(err)
 	}

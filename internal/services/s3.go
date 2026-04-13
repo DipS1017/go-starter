@@ -17,8 +17,13 @@ import (
 	"github.com/webpoint-solutions-llc/go-starter/internal/utils"
 )
 
+// S3Client wraps the AWS S3 client and presigner, and implements the storage interface.
+type S3Client struct {
+	client    *s3.Client
+	presigner *s3.PresignClient
+}
+
 func newS3Client(ctx context.Context) (*S3Client, error) {
-	// only pass region into LoadDefaultConfig
 	cfg, err := s3Config.LoadDefaultConfig(ctx,
 		s3Config.WithRegion(config.Cfg.S3Region),
 	)
@@ -26,37 +31,30 @@ func newS3Client(ctx context.Context) (*S3Client, error) {
 		return nil, err
 	}
 
-	// build service‐specific options
 	svcOpts := []func(*s3.Options){}
-
 	if config.Cfg.S3Endpoint != "" {
-		// in dev: point at MinIO and force path‐style URLs
 		svcOpts = append(svcOpts, func(o *s3.Options) {
 			o.BaseEndpoint = aws.String(config.Cfg.S3Endpoint)
 			o.UsePathStyle = true
 		})
 	}
 
-	// instantiate client with our options
 	client := s3.NewFromConfig(cfg, svcOpts...)
-	presigner := s3.NewPresignClient(client)
-
 	return &S3Client{
 		client:    client,
-		presigner: presigner,
+		presigner: s3.NewPresignClient(client),
 	}, nil
 }
 
-func (s *Service) UploadFile(ctx context.Context, params dto.S3UploadParams) (dto.S3FileUpload, error) {
+func (c *S3Client) UploadFile(ctx context.Context, params dto.S3UploadParams) (dto.S3FileUpload, error) {
 	uploadCtx, cancel := context.WithTimeout(ctx, 4*time.Minute)
 	defer cancel()
 
-	uploader := manager.NewUploader(s.s3Client.client, func(u *manager.Uploader) {
-		u.PartSize = 5 * 1024 * 1024 // 5 MiB per part
+	uploader := manager.NewUploader(c.client, func(u *manager.Uploader) {
+		u.PartSize = 5 * 1024 * 1024
 		u.Concurrency = 3
 	})
 
-	// Detect content type if not provided
 	contentType := params.ContentType
 	if contentType == "" {
 		contentType = "application/octet-stream"
@@ -72,17 +70,14 @@ func (s *Service) UploadFile(ctx context.Context, params dto.S3UploadParams) (dt
 		return dto.S3FileUpload{}, fmt.Errorf("failed to upload file to S3: %w", err)
 	}
 
-	s3Upload := dto.S3FileUpload{
+	return dto.S3FileUpload{
 		Key:         params.Key,
 		Size:        params.Size,
 		ContentType: contentType,
-	}
-
-	return s3Upload, nil
+	}, nil
 }
 
-func (s *Service) S3MediaURL(ctx context.Context, key string) (string, error) {
-	// if its using minio
+func (c *S3Client) S3MediaURL(ctx context.Context, key string) (string, error) {
 	if config.Cfg.S3Endpoint != "" {
 		return utils.JoinS3URL(key)
 	}
@@ -92,7 +87,7 @@ func (s *Service) S3MediaURL(ctx context.Context, key string) (string, error) {
 		expires = 3 * time.Hour
 	}
 
-	resp, err := s.s3Client.presigner.PresignGetObject(ctx, &s3.GetObjectInput{
+	resp, err := c.presigner.PresignGetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(config.Cfg.S3Bucket),
 		Key:    aws.String(key),
 	}, s3.WithPresignExpires(expires))
@@ -102,8 +97,7 @@ func (s *Service) S3MediaURL(ctx context.Context, key string) (string, error) {
 	return resp.URL, nil
 }
 
-// DeleteObjects deletes a list of objects from the configured S3 bucket.
-func (s *Service) DeleteObjects(ctx context.Context, objects []s3types.ObjectIdentifier, bypassGovernance bool) error {
+func (c *S3Client) DeleteObjects(ctx context.Context, objects []s3types.ObjectIdentifier, bypassGovernance bool) error {
 	deleteCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancel()
 
@@ -130,7 +124,7 @@ func (s *Service) DeleteObjects(ctx context.Context, objects []s3types.ObjectIde
 		input.BypassGovernanceRetention = aws.Bool(true)
 	}
 
-	delOut, err := s.s3Client.client.DeleteObjects(deleteCtx, &input)
+	delOut, err := c.client.DeleteObjects(deleteCtx, &input)
 	if err != nil {
 		var noBucket *s3types.NoSuchBucket
 		if errors.As(err, &noBucket) {
@@ -140,15 +134,13 @@ func (s *Service) DeleteObjects(ctx context.Context, objects []s3types.ObjectIde
 		return fmt.Errorf("failed to delete objects from bucket %s: %w", config.Cfg.S3Bucket, err)
 	}
 
-	if len(delOut.Errors) > 0 {
-		for _, outErr := range delOut.Errors {
-			log.Printf("Failed to delete object %s: %s\n", *outErr.Key, *outErr.Message)
-		}
+	for _, outErr := range delOut.Errors {
+		log.Printf("Failed to delete object %s: %s\n", *outErr.Key, *outErr.Message)
 	}
 
 	for _, delObjs := range delOut.Deleted {
 		log.Printf("Successfully requested deletion of %s.\n", *delObjs.Key)
-		waitErr := s3.NewObjectNotExistsWaiter(s.s3Client.client).Wait(
+		waitErr := s3.NewObjectNotExistsWaiter(c.client).Wait(
 			deleteCtx, &s3.HeadObjectInput{Bucket: aws.String(config.Cfg.S3Bucket), Key: delObjs.Key}, time.Minute)
 		if waitErr != nil {
 			log.Printf("Warning: Failed to confirm deletion of object %s: %v\n", *delObjs.Key, waitErr)
@@ -157,4 +149,19 @@ func (s *Service) DeleteObjects(ctx context.Context, objects []s3types.ObjectIde
 		}
 	}
 	return nil
+}
+
+// The following methods delegate to s.store so that Service satisfies the handler-level
+// MediaService and UserService interfaces while keeping S3 logic behind the storage interface.
+
+func (s *Service) UploadFile(ctx context.Context, params dto.S3UploadParams) (dto.S3FileUpload, error) {
+	return s.store.UploadFile(ctx, params)
+}
+
+func (s *Service) S3MediaURL(ctx context.Context, key string) (string, error) {
+	return s.store.S3MediaURL(ctx, key)
+}
+
+func (s *Service) DeleteObjects(ctx context.Context, objects []s3types.ObjectIdentifier, bypassGovernance bool) error {
+	return s.store.DeleteObjects(ctx, objects, bypassGovernance)
 }
